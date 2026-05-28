@@ -24,8 +24,6 @@
 }
 html{height:100%;background:var(--bg);-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
 body{height:100dvh;display:flex;flex-direction:column;background:var(--bg);color:var(--text);font-family:var(--mono);overflow:hidden;padding-top:var(--safe-top);padding-left:var(--safe-l);padding-right:var(--safe-r)}
-
-/* HEADER */
 header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:52px;background:var(--surf);border-bottom:1px solid var(--border);z-index:10;gap:10px}
 .logo{font-family:var(--head);font-weight:800;font-size:1.2rem;letter-spacing:-0.02em;flex-shrink:0}
 .logo em{font-style:normal;color:var(--accent)}
@@ -40,8 +38,6 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
 .pill.on .dot{animation:blink 1.6s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
-
-/* MAP */
 #map-wrap{flex-shrink:0;position:relative;height:52dvh;min-height:240px;background:#0d1520}
 #viewDiv{width:100%;height:100%;padding:0;margin:0}
 .map-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#0d1520;z-index:400;transition:opacity 0.45s;pointer-events:none}
@@ -52,8 +48,6 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 .map-loading p{font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
 .map-spin{width:28px;height:28px;border:2.5px solid rgba(61,168,255,0.2);border-top-color:var(--accent);border-radius:50%;animation:rot 0.8s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
-
-/* PANEL */
 #panel{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:var(--bg);padding:18px 18px 0;display:flex;flex-direction:column;gap:14px}
 .section-lbl{font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
 .coord-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -68,16 +62,12 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 .err-box{background:rgba(255,157,61,0.08);border:1px solid rgba(255,157,61,0.3);border-radius:8px;padding:12px 14px;font-size:0.73rem;color:var(--warn);line-height:1.65;display:none}
 .err-box.show{display:block}
 .panel-spacer{height:90px;flex-shrink:0}
-
-/* BUTTON */
 #btn-wrap{flex-shrink:0;padding:12px 18px calc(12px + var(--safe-bot));background:var(--bg);border-top:1px solid var(--border)}
 #loc-btn{width:100%;height:56px;display:flex;align-items:center;justify-content:center;gap:10px;background:transparent;border:1.5px solid var(--accent);border-radius:12px;color:var(--accent);font-family:var(--mono);font-size:0.85rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none;transition:background 0.15s,opacity 0.2s}
 #loc-btn:active{background:rgba(61,168,255,0.08)}
 .btn-spin{width:16px;height:16px;border:2px solid rgba(61,168,255,0.22);border-top-color:var(--accent);border-radius:50%;animation:rot 0.7s linear infinite;display:none;flex-shrink:0}
 #loc-btn.busy .btn-spin{display:block}
 #loc-btn.busy #btn-label{opacity:0.5}
-
-/* GLOBE MODAL */
 #modal-overlay{position:fixed;inset:0;background:rgba(7,11,17,0.82);z-index:2000;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.3s;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 #modal-overlay.open{opacity:1;pointer-events:all}
 #modal-card{width:100%;background:var(--surf);border-top:1px solid var(--border2);border-radius:20px 20px 0 0;padding:28px 24px calc(28px + var(--safe-bot));display:flex;flex-direction:column;align-items:center;gap:14px;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.32,0.72,0,1)}
@@ -93,12 +83,8 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 #ar-btn{width:100%;height:58px;display:flex;align-items:center;justify-content:center;gap:10px;background:var(--amber);border:none;border-radius:12px;color:#0b0f14;font-family:var(--mono);font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none;margin-top:4px;transition:opacity 0.15s,transform 0.1s}
 #ar-btn:active{opacity:0.85;transform:scale(0.98)}
 #dismiss-btn{background:none;border:none;color:var(--muted);font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;touch-action:manipulation;padding:8px 16px}
-
-/* TOAST */
 #score-toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-20px);background:rgba(255,184,48,0.12);border:1px solid rgba(255,184,48,0.45);border-radius:999px;padding:8px 22px;font-size:0.78rem;font-weight:700;letter-spacing:0.06em;color:var(--amber);z-index:3000;opacity:0;pointer-events:none;transition:opacity 0.25s,transform 0.25s;white-space:nowrap}
 #score-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* AR VIEWER */
 #ar-viewer{position:fixed;inset:0;z-index:4000;display:flex;flex-direction:column;background:#000;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.32,0.72,0,1)}
 #ar-viewer.open{transform:translateY(0)}
 #ar-header{flex-shrink:0;height:calc(52px + var(--safe-top));padding-top:var(--safe-top);padding-left:16px;padding-right:16px;display:flex;align-items:center;justify-content:space-between;background:var(--surf);border-bottom:1px solid var(--border)}
@@ -111,8 +97,6 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 #ar-launch-btn:active{opacity:0.85;transform:scale(0.97)}
 .ar-hint-text{pointer-events:none;font-size:0.65rem;letter-spacing:0.08em;text-align:center;color:rgba(255,255,255,0.45);line-height:1.7}
 #ar-not-supported{display:none;position:absolute;bottom:calc(28px + var(--safe-bot));left:24px;right:24px;text-align:center;font-size:0.7rem;color:var(--warn);line-height:1.8;background:rgba(255,157,61,0.08);border:1px solid rgba(255,157,61,0.25);border-radius:10px;padding:12px}
-
-/* SCORECARD */
 #scorecard-overlay{position:fixed;inset:0;z-index:5000;background:rgba(7,11,17,0.82);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity 0.3s;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 #scorecard-overlay.open{opacity:1;pointer-events:all}
 #scorecard-card{width:100%;max-width:360px;background:var(--surf);border:1px solid var(--border2);border-radius:20px;overflow:hidden;transform:scale(0.92) translateY(16px);transition:transform 0.35s cubic-bezier(0.32,0.72,0,1);box-shadow:0 24px 64px rgba(0,0,0,0.6)}
@@ -133,8 +117,6 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 #sc-screenshot-btn{display:flex;align-items:center;gap:8px;background:var(--surf2);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;padding:10px 16px;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none}
 #sc-screenshot-btn:active{opacity:0.7}
 #sc-screenshot-btn.saving{color:var(--green);border-color:var(--green)}
-
-/* NAME MODAL */
 #name-overlay{position:fixed;inset:0;background:rgba(7,11,17,0.88);z-index:6000;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity 0.3s;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 #name-overlay.open{opacity:1;pointer-events:all}
 #name-card{width:100%;max-width:340px;background:var(--surf);border:1px solid var(--border2);border-radius:20px;padding:32px 24px calc(24px + var(--safe-bot));display:flex;flex-direction:column;align-items:center;gap:16px;transform:scale(0.92);transition:transform 0.3s cubic-bezier(0.32,0.72,0,1)}
@@ -147,8 +129,6 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 #player-name-input::placeholder{color:var(--muted)}
 #name-submit-btn{width:100%;height:52px;background:var(--amber);border:none;border-radius:12px;color:#0b0f14;font-family:var(--mono);font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;touch-action:manipulation}
 #name-submit-btn:active{opacity:0.85}
-
-/* LEADERBOARD */
 #lb-overlay{position:fixed;inset:0;background:rgba(7,11,17,0.88);z-index:6000;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.3s;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 #lb-overlay.open{opacity:1;pointer-events:all}
 #lb-card{width:100%;background:var(--surf);border-top:1px solid var(--border2);border-radius:20px 20px 0 0;padding:0 0 calc(16px + var(--safe-bot));max-height:80dvh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.32,0.72,0,1)}
@@ -185,10 +165,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
     <div class="score-badge" id="score-badge" onclick="openScorecard()" role="button">
       &#9733; <span id="score-num">0</span>
     </div>
-    <div class="pill" id="pill">
-      <div class="dot"></div>
-      <span id="pill-txt">Ready</span>
-    </div>
+    <div class="pill" id="pill"><div class="dot"></div><span id="pill-txt">Ready</span></div>
   </div>
 </header>
 
@@ -198,7 +175,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
     <svg width="46" height="46" viewBox="0 0 48 48" fill="none">
       <circle cx="24" cy="24" r="22" stroke="#3da8ff" stroke-width="1.5" stroke-dasharray="4 3"/>
       <circle cx="24" cy="24" r="5" fill="#3da8ff" opacity="0.6"/>
-      <line x1="24" y1="2" x2="24" y2="14" stroke="#3da8ff" stroke-width="1.5"/>
+      <line x1="24" y1="2"  x2="24" y2="14" stroke="#3da8ff" stroke-width="1.5"/>
       <line x1="24" y1="34" x2="24" y2="46" stroke="#3da8ff" stroke-width="1.5"/>
       <line x1="2"  y1="24" x2="14" y2="24" stroke="#3da8ff" stroke-width="1.5"/>
       <line x1="34" y1="24" x2="46" y2="24" stroke="#3da8ff" stroke-width="1.5"/>
@@ -238,7 +215,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
   </button>
 </div>
 
-<!-- GLOBE DETECTED MODAL -->
+<!-- GLOBIE DETECTED MODAL -->
 <div id="modal-overlay" role="dialog" aria-modal="true">
   <div id="modal-card">
     <div class="modal-handle"></div>
@@ -266,7 +243,6 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
   </div>
 </div>
 
-<!-- TOAST -->
 <div id="score-toast"></div>
 
 <!-- AR VIEWER -->
@@ -286,18 +262,11 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
     id="the-model-viewer"
     src="https://trbaker.github.io/geogames/Nearky_Pangea.glb"
     alt="A 3D Globie"
-    ar
-    ar-modes="webxr scene-viewer quick-look"
-    ar-scale="fixed"
-    camera-controls
-    auto-rotate
-    auto-rotate-delay="0"
-    rotation-per-second="20deg"
-    shadow-intensity="1"
-    shadow-softness="0.8"
-    exposure="1.1"
-    environment-image="neutral"
-    loading="lazy">
+    ar ar-modes="webxr scene-viewer quick-look"
+    ar-scale="fixed" camera-controls auto-rotate
+    auto-rotate-delay="0" rotation-per-second="20deg"
+    shadow-intensity="1" shadow-softness="0.8"
+    exposure="1.1" environment-image="neutral" loading="lazy">
     <div slot="progress-bar" style="display:none"></div>
   </model-viewer>
   <div id="ar-launch-wrap">
@@ -345,647 +314,6 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
   </div>
 </div>
 
-<script src="https://js.arcgis.com/4.29/"></script>
-<script>
-/* Load Supabase UMD with fallback */
-(function() {
-  var s = document.createElement('script');
-  s.src = 'https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js';
-  s.onerror = function() {
-    var s2 = document.createElement('script');
-    s2.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
-    s2.onload = function() { window._sbSDKReady(); };
-    document.head.appendChild(s2);
-  };
-  s.onload = function() { window._sbSDKReady(); };
-  document.head.appendChild(s);
-})();
-</script>
-<script>
-/* ═══════════════════════════════════════════
-   CONFIGURATION
-   ═══════════════════════════════════════════ */
-const GLOBE_GLB_URL        = "https://trbaker.github.io/geogames/Nearky_Pangea.glb";
-const WEB_MAP_ID           = "359e7e596f6745558679fc9962d7ab72";
-const TRIGGER_DISTANCE_M   = 50;
-const SUPABASE_URL         = "https://dnoqkdtfrrpdgfjpvskq.supabase.co";
-const SUPABASE_ANON_KEY    = "sb_publishable_GgtHzHoUTxPdbzsCNwqOcg_7wR27SkM";
-
-const TARGETS = [
-  { name: "Globie #1", lat: 38.912281, lng: -94.613686 },
-  // more targets coming...
-];
-/* ═══════════════════════════════════════════ */
-
-/* ── STATE ── */
-let view            = null;
-let userGraphic     = null;
-let accuracyGraphic = null;
-let watchId         = null;
-let lastLat         = null;
-let lastLng         = null;
-let lastAcc         = 20;
-let lastDMSlat      = '';
-let lastDMSlng      = '';
-let score           = 0;
-let playerName      = localStorage.getItem('gc_player_name') || null;
-let playerId        = localStorage.getItem('gc_player_id')   || null;
-let sbClient        = null;
-let foundTargets    = new Set();
-let arPending       = false;
-let activeTarget    = null;
-let mapCentered     = false;
-
-/* ── HELPERS ── */
-function setPill(cls, txt) {
-  var p = document.getElementById('pill');
-  p.className = 'pill' + (cls ? ' ' + cls : '');
-  document.getElementById('pill-txt').textContent = txt;
-}
-
-function showErr(msg) {
-  var e = document.getElementById('err-box');
-  e.textContent = msg;
-  e.classList.add('show');
-}
-
-function hideErr() {
-  document.getElementById('err-box').classList.remove('show');
-}
-
-function showToast(msg) {
-  var t = document.getElementById('score-toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(function() { t.classList.remove('show'); }, 2800);
-}
-
-function toDMS(d, pos, neg) {
-  var dir = d >= 0 ? pos : neg;
-  var a = Math.abs(d), deg = Math.floor(a);
-  var mf = (a - deg) * 60, min = Math.floor(mf);
-  var sec = ((mf - min) * 60).toFixed(1);
-  return deg + '\u00b0 ' + min + "' " + sec + '" ' + dir;
-}
-
-/* ── HAVERSINE ── */
-function haversine(lat1, lng1, lat2, lng2) {
-  var R = 6371000;
-  var toRad = function(d) { return d * Math.PI / 180; };
-  var dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1);
-  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-          Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-          Math.sin(dLng/2) * Math.sin(dLng/2);
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-
-/* ── PROXIMITY ── */
-function checkProximity(lat, lng) {
-  for (var i = 0; i < TARGETS.length; i++) {
-    if (foundTargets.has(i)) continue;
-    var d = haversine(lat, lng, TARGETS[i].lat, TARGETS[i].lng);
-    if (d <= TRIGGER_DISTANCE_M) {
-      showModal(TARGETS[i], i, Math.round(d));
-      return;
-    }
-  }
-}
-
-/* ── GLOBE MODAL ── */
-function showModal(target, idx, distM) {
-  activeTarget = { target: target, idx: idx };
-  document.getElementById('modal-target-name').textContent = target.name;
-  document.getElementById('modal-dist').innerHTML =
-    'You are <strong>' + distM + ' m</strong> from this Globie';
-  document.getElementById('modal-overlay').classList.add('open');
-}
-
-function dismissModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
-  activeTarget = null;
-}
-
-/* ── AR ── */
-function launchAR() {
-  document.getElementById('modal-overlay').classList.remove('open');
-  document.getElementById('ar-viewer').classList.add('open');
-  arPending = true;
-}
-
-function activateAR() {
-  var mv = document.getElementById('the-model-viewer');
-  if (!mv || !mv.canActivateAR) {
-    document.getElementById('ar-not-supported').style.display = 'block';
-    setTimeout(function() {
-      document.getElementById('ar-not-supported').style.display = 'none';
-    }, 4000);
-    return;
-  }
-  mv.activateAR();
-}
-
-function closeAR() {
-  var mv = document.getElementById('the-model-viewer');
-  try { if (mv && mv.exitPresentAR) mv.exitPresentAR(); } catch(e) {}
-  document.getElementById('ar-viewer').classList.remove('open');
-
-  if (arPending && activeTarget !== null) {
-    arPending = false;
-    foundTargets.add(activeTarget.idx);
-    score++;
-    updateScore();
-    showToast('+1  ' + activeTarget.target.name + ' found!');
-    activeTarget = null;
-  }
-
-  // Redraw marker after map resize caused by overlay closing
-  if (lastLat !== null && window._plotPosition) {
-    setTimeout(function() {
-      if (view && view.ready) { try { view.resize(); } catch(e) {} }
-      window._plotPosition(lastLat, lastLng, lastAcc);
-    }, 400);
-  }
-}
-
-/* ── SCORE ── */
-function updateScore() {
-  document.getElementById('score-num').textContent = score;
-  var b = document.getElementById('score-badge');
-  b.classList.add('bump');
-  setTimeout(function() { b.classList.remove('bump'); }, 300);
-  sbUpsertScore();
-}
-
-/* ── TRACKING ── */
-function toggleTracking() {
-  if (watchId !== null) {
-    stopTracking();
-  } else {
-    startTracking();
-  }
-}
-
-function startTracking() {
-  if (!navigator.geolocation) {
-    showErr('Geolocation is not supported by this browser.');
-    return;
-  }
-  if (!playerName) {
-    openNameModal();
-    return;
-  }
-
-  var btn = document.getElementById('loc-btn');
-  btn.classList.add('busy');
-  document.getElementById('btn-label').textContent = 'Acquiring signal\u2026';
-  btn.style.borderColor = '';
-  btn.style.color = '';
-  setPill('', 'Locating');
-  hideErr();
-  document.getElementById('map-loading').classList.add('show');
-  mapCentered = false;
-
-  watchId = navigator.geolocation.watchPosition(
-    function(pos) {
-      try {
-        var lat = pos.coords.latitude;
-        var lng = pos.coords.longitude;
-        var acc = pos.coords.accuracy;
-
-        lastLat = lat;
-        lastLng = lng;
-        lastAcc = acc;
-        lastDMSlat = toDMS(lat, 'N', 'S');
-        lastDMSlng = toDMS(lng, 'E', 'W');
-
-        // Update coordinate display
-        document.getElementById('lat-val').textContent = lat.toFixed(7) + '\u00b0';
-        document.getElementById('lng-val').textContent = lng.toFixed(7) + '\u00b0';
-        document.getElementById('lat-dms').textContent = lastDMSlat;
-        document.getElementById('lng-dms').textContent = lastDMSlng;
-        document.getElementById('cc-lat').classList.add('lit');
-        document.getElementById('cc-lng').classList.add('lit');
-
-        setPill('on', 'Tracking');
-        hideErr();
-
-        // Update map if ready, otherwise just clear the loading overlay
-        if (window._plotPosition) {
-          try { window._plotPosition(lat, lng, acc); } catch(mapErr) {
-            document.getElementById('map-loading').classList.remove('show');
-          }
-        } else {
-          document.getElementById('map-loading').classList.remove('show');
-        }
-
-        // Switch button to Stop state
-        btn.classList.remove('busy');
-        btn.style.borderColor = 'var(--warn)';
-        btn.style.color = 'var(--warn)';
-        document.getElementById('btn-label').textContent = '\u25a0\u00a0 Stop Tracking';
-
-        // Check proximity to all targets
-        checkProximity(lat, lng);
-
-      } catch(callbackErr) {
-        // Surface any hidden error so it's visible on screen
-        showErr('GPS callback error: ' + callbackErr.message);
-      }
-    },
-    function(err) {
-      // err.code 1 = PERMISSION_DENIED (fatal — stop watching)
-      // err.code 2 = POSITION_UNAVAILABLE (transient — keep watching)
-      // err.code 3 = TIMEOUT (transient — keep watching)
-      if (err.code === 1) {
-        // Fatal: permission denied — clean up fully
-        if (watchId !== null) {
-          navigator.geolocation.clearWatch(watchId);
-          watchId = null;
-        }
-        btn.classList.remove('busy');
-        btn.style.borderColor = '';
-        btn.style.color = '';
-        document.getElementById('btn-label').textContent = 'Start Tracking';
-        document.getElementById('map-loading').classList.remove('show');
-        setPill('err', 'Error');
-        showErr('Location permission denied. Please enable it in your device settings.');
-      } else {
-        // Transient error (weak signal/timeout) - keep watching
-        setPill('', 'Locating...');
-        document.getElementById('map-loading').classList.remove('show');
-      }
-    },
-    // No timeout — watchPosition should run indefinitely.
-    // timeout only makes sense for getCurrentPosition.
-    { enableHighAccuracy: true, maximumAge: 0 }
-  );
-}
-
-function stopTracking() {
-  if (watchId !== null) {
-    navigator.geolocation.clearWatch(watchId);
-    watchId = null;
-  }
-  var btn = document.getElementById('loc-btn');
-  btn.classList.remove('busy');
-  btn.style.borderColor = '';
-  btn.style.color = '';
-  document.getElementById('btn-label').textContent = 'Start Tracking';
-  setPill('', 'Paused');
-}
-
-/* ── ARCGIS MAP (non-blocking) ── */
-if (typeof require !== 'undefined') {
-  require([
-    "esri/WebMap",
-    "esri/views/MapView",
-    "esri/Graphic",
-    "esri/geometry/Point",
-    "esri/geometry/geometryEngine",
-    "esri/symbols/SimpleMarkerSymbol",
-    "esri/symbols/SimpleFillSymbol",
-    "esri/symbols/SimpleLineSymbol",
-    "esri/widgets/Zoom"
-  ], function(WebMap, MapView, Graphic, Point, geometryEngine,
-              SimpleMarkerSymbol, SimpleFillSymbol, SimpleLineSymbol, Zoom) {
-
-    var webmap = new WebMap({ portalItem: { id: WEB_MAP_ID } });
-    view = new MapView({ container: "viewDiv", map: webmap, ui: { components: [] } });
-    view.ui.add(new Zoom({ view: view }), "bottom-right");
-
-    view.when(function() {
-      document.getElementById('placeholder').classList.add('gone');
-      setPill('on', 'Map ready');
-
-      // Plot target Globie markers
-      TARGETS.forEach(function(t) {
-        view.graphics.add(new Graphic({
-          geometry: new Point({ latitude: t.lat, longitude: t.lng }),
-          symbol: new SimpleMarkerSymbol({
-            style: 'circle', color: [255, 184, 48, 0.9], size: 12,
-            outline: { color: [255, 255, 255, 0.7], width: 1.5 }
-          }),
-          popupTemplate: { title: t.name, content: 'Lat: ' + t.lat + '\u00b0, Lng: ' + t.lng + '\u00b0' }
-        }));
-      });
-
-      // If GPS is already running, plot position immediately
-      if (lastLat !== null && window._plotPosition) {
-        window._plotPosition(lastLat, lastLng, lastAcc);
-      }
-
-    }).catch(function(err) {
-      console.warn('WebMap load error:', err);
-      setPill('err', 'Map error');
-      document.getElementById('placeholder').querySelector('p').textContent =
-        'Map unavailable \u2014 tracking still works.';
-    });
-
-    window._plotPosition = function(lat, lng, acc) {
-      if (!view || !view.ready) return;
-
-      var pt = new Point({ latitude: lat, longitude: lng });
-
-      if (userGraphic)     view.graphics.remove(userGraphic);
-      if (accuracyGraphic) view.graphics.remove(accuracyGraphic);
-
-      accuracyGraphic = new Graphic({
-        geometry: geometryEngine.geodesicBuffer(pt, Math.max(acc, 1), 'meters'),
-        symbol: new SimpleFillSymbol({
-          color: [61, 168, 255, 0.07],
-          outline: new SimpleLineSymbol({ color: [61, 168, 255, 0.55], width: 1, style: 'dash' })
-        })
-      });
-
-      userGraphic = new Graphic({
-        geometry: pt,
-        symbol: new SimpleMarkerSymbol({
-          style: 'circle', color: [61, 168, 255, 1], size: 14,
-          outline: { color: [255, 255, 255, 0.9], width: 2 }
-        }),
-        popupTemplate: {
-          title: 'You are here',
-          content: 'Lat: ' + lat.toFixed(6) + '\u00b0<br>Lng: ' + lng.toFixed(6) +
-                   '\u00b0<br>Accuracy: \u00b1' + Math.round(acc) + ' m'
-        }
-      });
-
-      view.graphics.addMany([accuracyGraphic, userGraphic]);
-
-      // Only fly to position on first fix
-      if (!mapCentered) {
-        view.goTo({ target: pt, zoom: 15 }, { duration: 900, easing: 'ease-in-out' });
-        mapCentered = true;
-      }
-
-      document.getElementById('map-loading').classList.remove('show');
-    };
-  });
-} else {
-  setPill('err', 'SDK unavailable');
-}
-
-/* ── model-viewer AR event ── */
-document.addEventListener('DOMContentLoaded', function() {
-  var mv = document.getElementById('the-model-viewer');
-  if (mv) {
-    mv.addEventListener('ar-status', function(e) {
-      if (e.detail.status === 'failed') {
-        document.getElementById('ar-not-supported').style.display = 'block';
-        setTimeout(function() {
-          document.getElementById('ar-not-supported').style.display = 'none';
-        }, 4000);
-      }
-    });
-  }
-});
-
-/* ── SCORECARD ── */
-function openScorecard() {
-  document.getElementById('sc-count-display').textContent = score;
-  document.getElementById('sc-total').textContent = TARGETS.length;
-  document.getElementById('scorecard-overlay').classList.add('open');
-}
-
-function closeScorecard() {
-  document.getElementById('scorecard-overlay').classList.remove('open');
-}
-
-/* ── SUPABASE ── */
-function initSupabase() {
-  if (sbClient) return sbClient;
-
-  // Try all UMD global patterns Supabase SDK may use
-  var lib = window.supabase || window.Supabase || (window.supabaseJs && window.supabaseJs.createClient ? window.supabaseJs : null);
-
-  if (lib && lib.createClient) {
-    try {
-      sbClient = lib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      console.log('Supabase client initialized OK');
-    } catch(e) {
-      console.warn('Supabase createClient error:', e.message);
-    }
-  } else {
-    console.warn('Supabase SDK not found on window. window.supabase=', typeof window.supabase);
-  }
-  return sbClient;
-}
-
-// Called by script onload callback
-window._sbSDKReady = function() {
-  console.log('Supabase SDK loaded, initializing...');
-  initSupabase();
-};
-
-// Also try on DOMContentLoaded and window load as fallbacks
-document.addEventListener('DOMContentLoaded', function() { initSupabase(); });
-window.addEventListener('load', function() { initSupabase(); });
-
-function sbUpsertScore() {
-  initSupabase();
-  if (!sbClient || !playerName) return;
-  if (!playerId) {
-    playerId = 'player_' + Math.random().toString(36).slice(2, 10) + '_' + Date.now();
-    localStorage.setItem('gc_player_id', playerId);
-  }
-  sbClient.from('scores')
-    .upsert({ id: playerId, player_name: playerName, score: score, updated_at: new Date().toISOString() },
-             { onConflict: 'id' })
-    .then(function(res) {
-      if (res.error) console.warn('Supabase upsert error:', res.error.message);
-    });
-}
-
-function openLeaderboard() {
-  initSupabase();
-  var overlay = document.getElementById('lb-overlay');
-  overlay.classList.add('open');
-  loadLeaderboard();
-}
-
-function closeLeaderboard() {
-  document.getElementById('lb-overlay').classList.remove('open');
-}
-
-function loadLeaderboard() {
-  initSupabase();
-  var list = document.getElementById('lb-list');
-  if (!sbClient) {
-    list.innerHTML = '<div class="lb-error">Leaderboard not connected.<br>Check your network and try again.</div>';
-    return;
-  }
-  list.innerHTML = '<div class="lb-loading"><div class="map-spin"></div></div>';
-  sbClient.from('scores')
-    .select('player_name, score')
-    .order('score', { ascending: false })
-    .limit(20)
-    .then(function(res) {
-      if (res.error) {
-        list.innerHTML = '<div class="lb-error">Could not load scores.</div>';
-        return;
-      }
-      if (!res.data || res.data.length === 0) {
-        list.innerHTML = '<div class="lb-empty">No scores yet. Be the first!</div>';
-        return;
-      }
-      var html = '';
-      res.data.forEach(function(row, i) {
-        var medal = i === 0 ? '&#127947;' : i === 1 ? '&#129352;' : i === 2 ? '&#129353;' : (i + 1) + '.';
-        var isMe = row.player_name === playerName;
-        html += '<div class="lb-row' + (isMe ? ' lb-me' : '') + '">' +
-          '<span class="lb-rank">' + medal + '</span>' +
-          '<span class="lb-name">' + escHtml(row.player_name) + (isMe ? ' <em>(you)</em>' : '') + '</span>' +
-          '<span class="lb-score">' + row.score + '</span>' +
-          '</div>';
-      });
-      list.innerHTML = html;
-    });
-}
-
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-/* ── SCREENSHOT ── */
-function takeScreenshot() {
-  var btn = document.getElementById('sc-screenshot-btn');
-  var origHTML = btn.innerHTML;
-  btn.classList.add('saving');
-  btn.textContent = 'Saving\u2026';
-  try {
-    var canvas = drawScorecard();
-    shareOrDownload(canvas, btn, origHTML);
-  } catch(e) {
-    console.error('Screenshot error:', e);
-    btn.classList.remove('saving');
-    btn.innerHTML = origHTML;
-    alert('Could not generate image. Please take a manual screenshot.');
-  }
-}
-
-function drawScorecard() {
-  var DPR = 3, W = 360, H = 480;
-  var c = document.createElement('canvas');
-  c.width = W * DPR; c.height = H * DPR;
-  var ctx = c.getContext('2d');
-  ctx.scale(DPR, DPR);
-
-  var bg = ctx.createLinearGradient(W*0.3, 0, W*0.7, H);
-  bg.addColorStop(0, '#0d1a2a'); bg.addColorStop(0.6, '#0b0f14');
-  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-
-  var glow = ctx.createRadialGradient(W/2, 0, 0, W/2, 0, W*0.75);
-  glow.addColorStop(0, 'rgba(61,168,255,0.10)');
-  glow.addColorStop(1, 'rgba(61,168,255,0)');
-  ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
-
-  var cx = W/2, ringY = 106, r = 40;
-  ctx.beginPath(); ctx.arc(cx, ringY, r+9, 0, Math.PI*2);
-  ctx.strokeStyle = 'rgba(255,184,48,0.12)'; ctx.lineWidth = 10; ctx.stroke();
-  ctx.beginPath(); ctx.arc(cx, ringY, r, 0, Math.PI*2);
-  ctx.strokeStyle = 'rgba(255,184,48,0.45)'; ctx.lineWidth = 1.5; ctx.stroke();
-
-  ctx.save(); ctx.translate(cx-18, ringY-18);
-  ctx.strokeStyle = '#ffb830'; ctx.lineWidth = 1.4;
-  ctx.beginPath(); ctx.arc(18,18,15,0,Math.PI*2); ctx.stroke();
-  ctx.beginPath(); ctx.ellipse(18,18,7,15,0,0,Math.PI*2); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(3,18); ctx.lineTo(33,18); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(5,10); ctx.quadraticCurveTo(18,14,31,10); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(5,26); ctx.quadraticCurveTo(18,22,31,26); ctx.stroke();
-  ctx.restore();
-
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#e8f2ff'; ctx.font = 'bold 20px sans-serif';
-  ctx.fillText('I found', cx, ringY + r + 36);
-  ctx.fillStyle = '#ffb830'; ctx.font = 'bold 26px sans-serif';
-  ctx.fillText('Globie', cx, ringY + r + 66);
-  ctx.fillStyle = '#e8f2ff'; ctx.font = 'bold 18px sans-serif';
-  ctx.fillText('at the EdSummit', cx, ringY + r + 92);
-  ctx.fillStyle = '#5d7a96'; ctx.font = '11px monospace';
-  ctx.fillText('GLOBIES DISCOVERED', cx, ringY + r + 126);
-
-  ctx.shadowColor = 'rgba(255,184,48,0.4)'; ctx.shadowBlur = 32;
-  ctx.fillStyle = '#ffb830'; ctx.font = 'bold 130px sans-serif';
-  ctx.fillText(String(score), cx, ringY + r + 248);
-  ctx.shadowBlur = 0;
-
-  ctx.fillStyle = '#5d7a96'; ctx.font = '11px monospace';
-  ctx.fillText('OUT OF ' + TARGETS.length + ' TOTAL', cx, ringY + r + 272);
-  ctx.fillStyle = 'rgba(93,122,150,0.4)'; ctx.font = '10px monospace';
-  ctx.fillText('GlobeCatcher AR \u00b7 EdSummit 2025', cx, H - 22);
-
-  return c;
-}
-
-function shareOrDownload(canvas, btn, origHTML) {
-  canvas.toBlob(function(blob) {
-    if (!blob) {
-      btn.classList.remove('saving'); btn.innerHTML = origHTML;
-      alert('Could not generate image. Please take a manual screenshot.');
-      return;
-    }
-    var file = new File([blob], 'globie-hunt-score.png', { type: 'image/png' });
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      navigator.share({ files: [file], title: 'My GlobeCatcher AR Score' })
-        .then(function() { flashSaved(btn, origHTML); })
-        .catch(function() { flashSaved(btn, origHTML); });
-      return;
-    }
-    try {
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url; a.download = 'globie-hunt-score.png';
-      document.body.appendChild(a); a.click();
-      document.body.removeChild(a);
-      setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
-      flashSaved(btn, origHTML);
-      return;
-    } catch(e) {}
-    window.open(canvas.toDataURL('image/png'), '_blank');
-    flashSaved(btn, origHTML);
-  }, 'image/png');
-}
-
-function flashSaved(btn, origHTML) {
-  btn.classList.remove('saving');
-  btn.textContent = '\u2713 Saved!';
-  setTimeout(function() { btn.innerHTML = origHTML; }, 2200);
-}
-
-/* ── NAME MODAL ── */
-function openNameModal() {
-  initSupabase();
-  document.getElementById('name-overlay').classList.add('open');
-  setTimeout(function() {
-    document.getElementById('player-name-input').focus();
-  }, 350);
-}
-
-function submitName() {
-  var input = document.getElementById('player-name-input');
-  var val = input.value.trim();
-  if (!val) { input.style.borderColor = 'var(--warn)'; return; }
-  playerName = val;
-  localStorage.setItem('gc_player_name', playerName);
-  if (!playerId) {
-    playerId = 'player_' + Math.random().toString(36).slice(2, 10) + '_' + Date.now();
-    localStorage.setItem('gc_player_id', playerId);
-  }
-  document.getElementById('name-overlay').classList.remove('open');
-  startTracking();
-}
-
-// Enter key submits name
-document.addEventListener('DOMContentLoaded', function() {
-  var inp = document.getElementById('player-name-input');
-  if (inp) {
-    inp.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') { e.preventDefault(); submitName(); }
-    });
-  }
-});
-</script>
-
 <!-- NAME ENTRY MODAL -->
 <div id="name-overlay" role="dialog" aria-modal="true">
   <div id="name-card">
@@ -1007,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function() {
   </div>
 </div>
 
-<!-- LEADERBOARD MODAL -->
+<!-- LEADERBOARD -->
 <div id="lb-overlay" role="dialog" aria-modal="true">
   <div id="lb-card">
     <div id="lb-header">
@@ -1020,5 +348,497 @@ document.addEventListener('DOMContentLoaded', function() {
     <div id="lb-list"></div>
   </div>
 </div>
+
+<script src="https://js.arcgis.com/4.29/"></script>
+<script>
+/* =====================================================
+   CONFIGURATION
+   ===================================================== */
+var SUPABASE_URL      = "https://dnoqkdtfrrpdgfjpvskq.supabase.co";
+var SUPABASE_KEY      = "sb_publishable_GgtHzHoUTxPdbzsCNwqOcg_7wR27SkM";
+var GLOBE_GLB_URL     = "https://trbaker.github.io/geogames/Nearky_Pangea.glb";
+var WEB_MAP_ID        = "359e7e596f6745558679fc9962d7ab72";
+var TRIGGER_DIST_M    = 50;
+
+var TARGETS = [
+  { name: "Globie #1", lat: 38.912281, lng: -94.613686 }
+  // more targets coming...
+];
+/* ===================================================== */
+
+/* STATE */
+var view            = null;
+var userGraphic     = null;
+var accuracyGraphic = null;
+var watchId         = null;
+var lastLat         = null;
+var lastLng         = null;
+var lastAcc         = 20;
+var lastDMSlat      = '';
+var lastDMSlng      = '';
+var score           = 0;
+var foundTargets    = {};
+var arPending       = false;
+var activeTarget    = null;
+var mapCentered     = false;
+var playerName      = localStorage.getItem('gc_player_name') || null;
+var playerId        = localStorage.getItem('gc_player_id')   || null;
+
+/* ── SUPABASE REST (no SDK — plain fetch) ── */
+function sbFetch(path, method, body) {
+  var opts = {
+    method: method || 'GET',
+    headers: {
+      'apikey':        SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type':  'application/json'
+    }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  return fetch(SUPABASE_URL + '/rest/v1/' + path, opts);
+}
+
+function sbUpsertScore() {
+  if (!playerName) return;
+  if (!playerId) {
+    playerId = 'gc_' + Math.random().toString(36).slice(2,10) + '_' + Date.now();
+    localStorage.setItem('gc_player_id', playerId);
+  }
+  var opts = {
+    method: 'POST',
+    headers: {
+      'apikey':        SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type':  'application/json',
+      'Prefer':        'resolution=merge-duplicates,return=minimal'
+    },
+    body: JSON.stringify({
+      id:          playerId,
+      player_name: playerName,
+      score:       score,
+      updated_at:  new Date().toISOString()
+    })
+  };
+  fetch(SUPABASE_URL + '/rest/v1/scores', opts)
+    .then(function(res) {
+      if (!res.ok) {
+        res.text().then(function(t) {
+          console.warn('Score save failed ' + res.status + ':', t);
+        });
+      } else {
+        console.log('Score saved to Supabase:', playerName, score);
+      }
+    })
+    .catch(function(e) { console.warn('Score fetch error:', e.message); });
+}
+
+function loadLeaderboard() {
+  var list = document.getElementById('lb-list');
+  list.innerHTML = '<div class="lb-loading"><div class="map-spin"></div></div>';
+  fetch(SUPABASE_URL + '/rest/v1/scores?select=player_name,score&order=score.desc&limit=20', {
+    headers: {
+      'apikey':        SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY
+    }
+  })
+  .then(function(res) {
+    if (!res.ok) {
+      return res.text().then(function(t) {
+        list.innerHTML = '<div class="lb-error">Error ' + res.status + ': ' + escHtml(t.slice(0,120)) + '</div>';
+      });
+    }
+    return res.json().then(function(data) {
+      if (!data || data.length === 0) {
+        list.innerHTML = '<div class="lb-empty">No scores yet &mdash; be the first!</div>';
+        return;
+      }
+      var medals = ['&#127947;','&#129352;','&#129353;'];
+      var out = '';
+      for (var i = 0; i < data.length; i++) {
+        var row   = data[i];
+        var isMe  = (row.player_name === playerName);
+        var rank  = i < 3 ? medals[i] : (i + 1) + '.';
+        out += '<div class="lb-row' + (isMe ? ' lb-me' : '') + '">' +
+          '<span class="lb-rank">' + rank + '</span>' +
+          '<span class="lb-name">' + escHtml(row.player_name) +
+            (isMe ? ' <em>(you)</em>' : '') + '</span>' +
+          '<span class="lb-score">' + row.score + '</span>' +
+          '</div>';
+      }
+      list.innerHTML = out;
+    });
+  })
+  .catch(function(e) {
+    list.innerHTML = '<div class="lb-error">Network error: ' + escHtml(e.message) + '</div>';
+  });
+}
+
+function openLeaderboard() {
+  document.getElementById('lb-overlay').classList.add('open');
+  loadLeaderboard();
+}
+
+function closeLeaderboard() {
+  document.getElementById('lb-overlay').classList.remove('open');
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* HELPERS */
+function setPill(cls, txt) {
+  var p = document.getElementById('pill');
+  p.className = 'pill' + (cls ? ' ' + cls : '');
+  document.getElementById('pill-txt').textContent = txt;
+}
+function showErr(msg) {
+  var e = document.getElementById('err-box');
+  e.textContent = msg; e.classList.add('show');
+}
+function hideErr() { document.getElementById('err-box').classList.remove('show'); }
+function showToast(msg) {
+  var t = document.getElementById('score-toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2800);
+}
+function toDMS(d, pos, neg) {
+  var dir = d >= 0 ? pos : neg;
+  var a = Math.abs(d), deg = Math.floor(a);
+  var mf = (a - deg) * 60, min = Math.floor(mf);
+  var sec = ((mf - min) * 60).toFixed(1);
+  return deg + '\u00b0 ' + min + "' " + sec + '" ' + dir;
+}
+
+/* HAVERSINE */
+function haversine(lat1, lng1, lat2, lng2) {
+  var R = 6371000;
+  var r = function(d) { return d * Math.PI / 180; };
+  var dLat = r(lat2 - lat1), dLng = r(lng2 - lng1);
+  var a = Math.sin(dLat/2)*Math.sin(dLat/2) +
+          Math.cos(r(lat1))*Math.cos(r(lat2))*Math.sin(dLng/2)*Math.sin(dLng/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+/* PROXIMITY */
+function checkProximity(lat, lng) {
+  for (var i = 0; i < TARGETS.length; i++) {
+    if (foundTargets[i]) continue;
+    var d = haversine(lat, lng, TARGETS[i].lat, TARGETS[i].lng);
+    if (d <= TRIGGER_DIST_M) {
+      showModal(TARGETS[i], i, Math.round(d));
+      return;
+    }
+  }
+}
+
+/* GLOBE MODAL */
+function showModal(target, idx, distM) {
+  activeTarget = { target: target, idx: idx };
+  document.getElementById('modal-target-name').textContent = target.name;
+  document.getElementById('modal-dist').innerHTML =
+    'You are <strong>' + distM + ' m</strong> from this Globie';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function dismissModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  activeTarget = null;
+}
+
+/* AR */
+function launchAR() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.getElementById('ar-viewer').classList.add('open');
+  arPending = true;
+}
+function activateAR() {
+  var mv = document.getElementById('the-model-viewer');
+  if (!mv || !mv.canActivateAR) {
+    document.getElementById('ar-not-supported').style.display = 'block';
+    setTimeout(function() {
+      document.getElementById('ar-not-supported').style.display = 'none';
+    }, 4000);
+    return;
+  }
+  mv.activateAR();
+}
+function closeAR() {
+  var mv = document.getElementById('the-model-viewer');
+  try { if (mv && mv.exitPresentAR) mv.exitPresentAR(); } catch(e) {}
+  document.getElementById('ar-viewer').classList.remove('open');
+  if (arPending && activeTarget !== null) {
+    arPending = false;
+    foundTargets[activeTarget.idx] = true;
+    score++;
+    updateScore();
+    showToast('+1  ' + activeTarget.target.name + ' found!');
+    activeTarget = null;
+  }
+  if (lastLat !== null && window._plotPosition) {
+    setTimeout(function() {
+      if (view && view.ready) { try { view.resize(); } catch(e) {} }
+      window._plotPosition(lastLat, lastLng, lastAcc);
+    }, 400);
+  }
+}
+
+/* SCORE */
+function updateScore() {
+  document.getElementById('score-num').textContent = score;
+  var b = document.getElementById('score-badge');
+  b.classList.add('bump');
+  setTimeout(function() { b.classList.remove('bump'); }, 300);
+  sbUpsertScore();
+}
+
+/* TRACKING */
+function toggleTracking() {
+  if (watchId !== null) { stopTracking(); } else { startTracking(); }
+}
+function startTracking() {
+  if (!navigator.geolocation) { showErr('Geolocation not supported.'); return; }
+  if (!playerName) { openNameModal(); return; }
+  var btn = document.getElementById('loc-btn');
+  btn.classList.add('busy');
+  document.getElementById('btn-label').textContent = 'Acquiring signal\u2026';
+  btn.style.borderColor = ''; btn.style.color = '';
+  setPill('', 'Locating');
+  hideErr();
+  document.getElementById('map-loading').classList.add('show');
+  mapCentered = false;
+
+  watchId = navigator.geolocation.watchPosition(
+    function(pos) {
+      try {
+        var lat = pos.coords.latitude;
+        var lng = pos.coords.longitude;
+        var acc = pos.coords.accuracy;
+        lastLat = lat; lastLng = lng; lastAcc = acc;
+        lastDMSlat = toDMS(lat,'N','S');
+        lastDMSlng = toDMS(lng,'E','W');
+        document.getElementById('lat-val').textContent = lat.toFixed(7) + '\u00b0';
+        document.getElementById('lng-val').textContent = lng.toFixed(7) + '\u00b0';
+        document.getElementById('lat-dms').textContent = lastDMSlat;
+        document.getElementById('lng-dms').textContent = lastDMSlng;
+        document.getElementById('cc-lat').classList.add('lit');
+        document.getElementById('cc-lng').classList.add('lit');
+        setPill('on', 'Tracking'); hideErr();
+        if (window._plotPosition) {
+          try { window._plotPosition(lat, lng, acc); } catch(me) {
+            document.getElementById('map-loading').classList.remove('show');
+          }
+        } else {
+          document.getElementById('map-loading').classList.remove('show');
+        }
+        btn.classList.remove('busy');
+        btn.style.borderColor = 'var(--warn)'; btn.style.color = 'var(--warn)';
+        document.getElementById('btn-label').textContent = '\u25a0\u00a0 Stop Tracking';
+        checkProximity(lat, lng);
+      } catch(e) { showErr('GPS error: ' + e.message); }
+    },
+    function(err) {
+      if (err.code === 1) {
+        if (watchId !== null) { navigator.geolocation.clearWatch(watchId); watchId = null; }
+        btn.classList.remove('busy');
+        btn.style.borderColor = ''; btn.style.color = '';
+        document.getElementById('btn-label').textContent = 'Start Tracking';
+        document.getElementById('map-loading').classList.remove('show');
+        setPill('err','Error');
+        showErr('Location permission denied. Please enable it in Settings.');
+      } else {
+        setPill('','Locating...');
+        document.getElementById('map-loading').classList.remove('show');
+      }
+    },
+    { enableHighAccuracy: true, maximumAge: 0 }
+  );
+}
+function stopTracking() {
+  if (watchId !== null) { navigator.geolocation.clearWatch(watchId); watchId = null; }
+  var btn = document.getElementById('loc-btn');
+  btn.classList.remove('busy');
+  btn.style.borderColor = ''; btn.style.color = '';
+  document.getElementById('btn-label').textContent = 'Start Tracking';
+  setPill('','Paused');
+}
+
+/* NAME MODAL */
+function openNameModal() {
+  document.getElementById('name-overlay').classList.add('open');
+  setTimeout(function() {
+    document.getElementById('player-name-input').focus();
+  }, 350);
+}
+function submitName() {
+  var val = document.getElementById('player-name-input').value.trim();
+  if (!val) {
+    document.getElementById('player-name-input').style.borderColor = 'var(--warn)';
+    return;
+  }
+  playerName = val;
+  localStorage.setItem('gc_player_name', playerName);
+  if (!playerId) {
+    playerId = 'gc_' + Math.random().toString(36).slice(2,10) + '_' + Date.now();
+    localStorage.setItem('gc_player_id', playerId);
+  }
+  document.getElementById('name-overlay').classList.remove('open');
+  startTracking();
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var inp = document.getElementById('player-name-input');
+  if (inp) inp.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); submitName(); }
+  });
+});
+
+/* SCORECARD */
+function openScorecard() {
+  document.getElementById('sc-count-display').textContent = score;
+  document.getElementById('sc-total').textContent = TARGETS.length;
+  document.getElementById('scorecard-overlay').classList.add('open');
+}
+function closeScorecard() {
+  document.getElementById('scorecard-overlay').classList.remove('open');
+}
+
+/* SCREENSHOT */
+function takeScreenshot() {
+  var btn = document.getElementById('sc-screenshot-btn');
+  var orig = btn.innerHTML;
+  btn.classList.add('saving'); btn.textContent = 'Saving\u2026';
+  try {
+    var canvas = drawScorecard();
+    shareOrDownload(canvas, btn, orig);
+  } catch(e) {
+    btn.classList.remove('saving'); btn.innerHTML = orig;
+    alert('Could not generate image. Please take a manual screenshot.');
+  }
+}
+function drawScorecard() {
+  var DPR=3,W=360,H=480;
+  var c=document.createElement('canvas');
+  c.width=W*DPR; c.height=H*DPR;
+  var ctx=c.getContext('2d');
+  ctx.scale(DPR,DPR);
+  var bg=ctx.createLinearGradient(W*0.3,0,W*0.7,H);
+  bg.addColorStop(0,'#0d1a2a'); bg.addColorStop(0.6,'#0b0f14');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+  var glow=ctx.createRadialGradient(W/2,0,0,W/2,0,W*0.75);
+  glow.addColorStop(0,'rgba(61,168,255,0.10)'); glow.addColorStop(1,'rgba(61,168,255,0)');
+  ctx.fillStyle=glow; ctx.fillRect(0,0,W,H);
+  var cx=W/2,ringY=106,r=40;
+  ctx.beginPath(); ctx.arc(cx,ringY,r+9,0,Math.PI*2);
+  ctx.strokeStyle='rgba(255,184,48,0.12)'; ctx.lineWidth=10; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx,ringY,r,0,Math.PI*2);
+  ctx.strokeStyle='rgba(255,184,48,0.45)'; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.save(); ctx.translate(cx-18,ringY-18);
+  ctx.strokeStyle='#ffb830'; ctx.lineWidth=1.4;
+  ctx.beginPath(); ctx.arc(18,18,15,0,Math.PI*2); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(18,18,7,15,0,0,Math.PI*2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(3,18); ctx.lineTo(33,18); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(5,10); ctx.quadraticCurveTo(18,14,31,10); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(5,26); ctx.quadraticCurveTo(18,22,31,26); ctx.stroke();
+  ctx.restore();
+  ctx.textAlign='center';
+  ctx.fillStyle='#e8f2ff'; ctx.font='bold 20px sans-serif'; ctx.fillText('I found',cx,ringY+r+36);
+  ctx.fillStyle='#ffb830'; ctx.font='bold 26px sans-serif'; ctx.fillText('Globie',cx,ringY+r+66);
+  ctx.fillStyle='#e8f2ff'; ctx.font='bold 18px sans-serif'; ctx.fillText('at the EdSummit',cx,ringY+r+92);
+  ctx.fillStyle='#5d7a96'; ctx.font='11px monospace'; ctx.fillText('GLOBIES DISCOVERED',cx,ringY+r+126);
+  ctx.shadowColor='rgba(255,184,48,0.4)'; ctx.shadowBlur=32;
+  ctx.fillStyle='#ffb830'; ctx.font='bold 130px sans-serif'; ctx.fillText(String(score),cx,ringY+r+248);
+  ctx.shadowBlur=0;
+  ctx.fillStyle='#5d7a96'; ctx.font='11px monospace'; ctx.fillText('OUT OF '+TARGETS.length+' TOTAL',cx,ringY+r+272);
+  ctx.fillStyle='rgba(93,122,150,0.4)'; ctx.font='10px monospace';
+  ctx.fillText('GlobeCatcher AR - EdSummit 2025',cx,H-22);
+  return c;
+}
+function shareOrDownload(canvas,btn,orig) {
+  canvas.toBlob(function(blob) {
+    if (!blob) { btn.classList.remove('saving'); btn.innerHTML=orig; alert('Screenshot failed.'); return; }
+    var file=new File([blob],'globecatcher-score.png',{type:'image/png'});
+    if (navigator.canShare && navigator.canShare({files:[file]})) {
+      navigator.share({files:[file],title:'My GlobeCatcher AR Score'})
+        .then(function(){flashSaved(btn,orig)}).catch(function(){flashSaved(btn,orig)});
+      return;
+    }
+    try {
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement('a');
+      a.href=url; a.download='globecatcher-score.png';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){URL.revokeObjectURL(url);},1000);
+      flashSaved(btn,orig); return;
+    } catch(e) {}
+    window.open(canvas.toDataURL('image/png'),'_blank');
+    flashSaved(btn,orig);
+  },'image/png');
+}
+function flashSaved(btn,orig) {
+  btn.classList.remove('saving'); btn.textContent='\u2713 Saved!';
+  setTimeout(function(){btn.innerHTML=orig;},2200);
+}
+
+/* ARCGIS MAP */
+if (typeof require !== 'undefined') {
+  require([
+    "esri/WebMap","esri/views/MapView","esri/Graphic","esri/geometry/Point",
+    "esri/geometry/geometryEngine","esri/symbols/SimpleMarkerSymbol",
+    "esri/symbols/SimpleFillSymbol","esri/symbols/SimpleLineSymbol","esri/widgets/Zoom"
+  ], function(WebMap,MapView,Graphic,Point,geometryEngine,
+              SimpleMarkerSymbol,SimpleFillSymbol,SimpleLineSymbol,Zoom) {
+    var webmap = new WebMap({ portalItem: { id: WEB_MAP_ID } });
+    view = new MapView({ container:"viewDiv", map:webmap, ui:{ components:[] } });
+    view.ui.add(new Zoom({ view:view }), "bottom-right");
+    view.when(function() {
+      document.getElementById('placeholder').classList.add('gone');
+      setPill('on','Map ready');
+      TARGETS.forEach(function(t) {
+        view.graphics.add(new Graphic({
+          geometry: new Point({ latitude:t.lat, longitude:t.lng }),
+          symbol: new SimpleMarkerSymbol({ style:'circle', color:[255,184,48,0.9], size:12, outline:{color:[255,255,255,0.7],width:1.5} }),
+          popupTemplate: { title:t.name, content:'Lat: '+t.lat+'\u00b0, Lng: '+t.lng+'\u00b0' }
+        }));
+      });
+      if (lastLat !== null && window._plotPosition) window._plotPosition(lastLat,lastLng,lastAcc);
+    }).catch(function(err) {
+      console.warn('WebMap error:',err);
+      setPill('err','Map error');
+      document.getElementById('placeholder').querySelector('p').textContent='Map unavailable - tracking still works.';
+    });
+    window._plotPosition = function(lat,lng,acc) {
+      if (!view||!view.ready) return;
+      var pt = new Point({latitude:lat,longitude:lng});
+      if (userGraphic)     view.graphics.remove(userGraphic);
+      if (accuracyGraphic) view.graphics.remove(accuracyGraphic);
+      accuracyGraphic = new Graphic({
+        geometry: geometryEngine.geodesicBuffer(pt,Math.max(acc,1),'meters'),
+        symbol: new SimpleFillSymbol({color:[61,168,255,0.07],outline:new SimpleLineSymbol({color:[61,168,255,0.55],width:1,style:'dash'})})
+      });
+      userGraphic = new Graphic({
+        geometry: pt,
+        symbol: new SimpleMarkerSymbol({style:'circle',color:[61,168,255,1],size:14,outline:{color:[255,255,255,0.9],width:2}}),
+        popupTemplate:{title:'You are here',content:'Lat: '+lat.toFixed(6)+'\u00b0<br>Lng: '+lng.toFixed(6)+'\u00b0<br>Accuracy: \u00b1'+Math.round(acc)+' m'}
+      });
+      view.graphics.addMany([accuracyGraphic,userGraphic]);
+      if (!mapCentered) {
+        view.goTo({target:pt,zoom:15},{duration:900,easing:'ease-in-out'});
+        mapCentered=true;
+      }
+      document.getElementById('map-loading').classList.remove('show');
+    };
+  });
+} else { setPill('err','SDK unavailable'); }
+
+/* model-viewer AR status */
+document.addEventListener('DOMContentLoaded', function() {
+  var mv = document.getElementById('the-model-viewer');
+  if (mv) mv.addEventListener('ar-status', function(e) {
+    if (e.detail.status === 'failed') {
+      document.getElementById('ar-not-supported').style.display = 'block';
+      setTimeout(function(){ document.getElementById('ar-not-supported').style.display='none'; },4000);
+    }
+  });
+});
+</script>
 </body>
 </html>
