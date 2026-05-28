@@ -739,10 +739,17 @@ function closeScorecard() {
 
 /* ── SUPABASE ── */
 function initSupabase() {
-  if (window.supabase && !sbClient) {
+  if (sbClient) return sbClient;
+  if (window.supabase && window.supabase.createClient) {
     sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   }
+  return sbClient;
 }
+
+// Initialize as soon as the SDK loads - don't wait for user interaction
+window.addEventListener('load', function() {
+  initSupabase();
+});
 
 function sbUpsertScore() {
   initSupabase();
@@ -761,7 +768,6 @@ function sbUpsertScore() {
 
 function openLeaderboard() {
   initSupabase();
-  if (!sbClient) { showToast('Leaderboard unavailable.'); return; }
   var overlay = document.getElementById('lb-overlay');
   overlay.classList.add('open');
   loadLeaderboard();
@@ -772,7 +778,12 @@ function closeLeaderboard() {
 }
 
 function loadLeaderboard() {
+  initSupabase();
   var list = document.getElementById('lb-list');
+  if (!sbClient) {
+    list.innerHTML = '<div class="lb-error">Leaderboard not connected.<br>Check your network and try again.</div>';
+    return;
+  }
   list.innerHTML = '<div class="lb-loading"><div class="map-spin"></div></div>';
   sbClient.from('scores')
     .select('player_name, score')
