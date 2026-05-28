@@ -346,7 +346,21 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 </div>
 
 <script src="https://js.arcgis.com/4.29/"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+/* Load Supabase UMD with fallback */
+(function() {
+  var s = document.createElement('script');
+  s.src = 'https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js';
+  s.onerror = function() {
+    var s2 = document.createElement('script');
+    s2.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+    s2.onload = function() { window._sbSDKReady(); };
+    document.head.appendChild(s2);
+  };
+  s.onload = function() { window._sbSDKReady(); };
+  document.head.appendChild(s);
+})();
+</script>
 <script>
 /* ═══════════════════════════════════════════
    CONFIGURATION
@@ -740,16 +754,32 @@ function closeScorecard() {
 /* ── SUPABASE ── */
 function initSupabase() {
   if (sbClient) return sbClient;
-  if (window.supabase && window.supabase.createClient) {
-    sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // Try all UMD global patterns Supabase SDK may use
+  var lib = window.supabase || window.Supabase || (window.supabaseJs && window.supabaseJs.createClient ? window.supabaseJs : null);
+
+  if (lib && lib.createClient) {
+    try {
+      sbClient = lib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      console.log('Supabase client initialized OK');
+    } catch(e) {
+      console.warn('Supabase createClient error:', e.message);
+    }
+  } else {
+    console.warn('Supabase SDK not found on window. window.supabase=', typeof window.supabase);
   }
   return sbClient;
 }
 
-// Initialize as soon as the SDK loads - don't wait for user interaction
-window.addEventListener('load', function() {
+// Called by script onload callback
+window._sbSDKReady = function() {
+  console.log('Supabase SDK loaded, initializing...');
   initSupabase();
-});
+};
+
+// Also try on DOMContentLoaded and window load as fallbacks
+document.addEventListener('DOMContentLoaded', function() { initSupabase(); });
+window.addEventListener('load', function() { initSupabase(); });
 
 function sbUpsertScore() {
   initSupabase();
