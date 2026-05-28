@@ -1,2 +1,2 @@
-# educ2026
-Esri Education Summit 2026
+
+<a href="game.html">Game demo</a>
