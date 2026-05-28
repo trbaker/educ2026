@@ -10,41 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/dark/main.css">
-<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js">
-/* ── NAME MODAL ── */
-function openNameModal() {
-  initSupabase();
-  document.getElementById('name-overlay').classList.add('open');
-  setTimeout(function() {
-    document.getElementById('player-name-input').focus();
-  }, 350);
-}
-
-function submitName() {
-  var input = document.getElementById('player-name-input');
-  var name = input.value.trim();
-  if (!name) { input.style.borderColor = 'var(--warn)'; return; }
-  playerName = name;
-  localStorage.setItem('gc_player_name', playerName);
-  if (!playerId) {
-    playerId = 'player_' + Math.random().toString(36).slice(2, 10) + '_' + Date.now();
-    localStorage.setItem('gc_player_id', playerId);
-  }
-  document.getElementById('name-overlay').classList.remove('open');
-  // Continue into tracking now that we have a name
-  startTracking();
-}
-
-// Allow Enter key to submit name
-document.addEventListener('DOMContentLoaded', function() {
-  var inp = document.getElementById('player-name-input');
-  if (inp) {
-    inp.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') { e.preventDefault(); submitName(); }
-    });
-  }
-});
-</script>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -944,6 +910,39 @@ function flashSaved(btn, origHTML) {
   btn.textContent = '\u2713 Saved!';
   setTimeout(function() { btn.innerHTML = origHTML; }, 2200);
 }
+
+/* ── NAME MODAL ── */
+function openNameModal() {
+  initSupabase();
+  document.getElementById('name-overlay').classList.add('open');
+  setTimeout(function() {
+    document.getElementById('player-name-input').focus();
+  }, 350);
+}
+
+function submitName() {
+  var input = document.getElementById('player-name-input');
+  var val = input.value.trim();
+  if (!val) { input.style.borderColor = 'var(--warn)'; return; }
+  playerName = val;
+  localStorage.setItem('gc_player_name', playerName);
+  if (!playerId) {
+    playerId = 'player_' + Math.random().toString(36).slice(2, 10) + '_' + Date.now();
+    localStorage.setItem('gc_player_id', playerId);
+  }
+  document.getElementById('name-overlay').classList.remove('open');
+  startTracking();
+}
+
+// Enter key submits name
+document.addEventListener('DOMContentLoaded', function() {
+  var inp = document.getElementById('player-name-input');
+  if (inp) {
+    inp.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); submitName(); }
+    });
+  }
+});
 </script>
 
 <!-- NAME ENTRY MODAL -->
