@@ -10,7 +10,41 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/dark/main.css">
-<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js">
+/* ── NAME MODAL ── */
+function openNameModal() {
+  initSupabase();
+  document.getElementById('name-overlay').classList.add('open');
+  setTimeout(function() {
+    document.getElementById('player-name-input').focus();
+  }, 350);
+}
+
+function submitName() {
+  var input = document.getElementById('player-name-input');
+  var name = input.value.trim();
+  if (!name) { input.style.borderColor = 'var(--warn)'; return; }
+  playerName = name;
+  localStorage.setItem('gc_player_name', playerName);
+  if (!playerId) {
+    playerId = 'player_' + Math.random().toString(36).slice(2, 10) + '_' + Date.now();
+    localStorage.setItem('gc_player_id', playerId);
+  }
+  document.getElementById('name-overlay').classList.remove('open');
+  // Continue into tracking now that we have a name
+  startTracking();
+}
+
+// Allow Enter key to submit name
+document.addEventListener('DOMContentLoaded', function() {
+  var inp = document.getElementById('player-name-input');
+  if (inp) {
+    inp.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); submitName(); }
+    });
+  }
+});
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -133,6 +167,40 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 #sc-screenshot-btn{display:flex;align-items:center;gap:8px;background:var(--surf2);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;padding:10px 16px;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none}
 #sc-screenshot-btn:active{opacity:0.7}
 #sc-screenshot-btn.saving{color:var(--green);border-color:var(--green)}
+
+/* NAME MODAL */
+#name-overlay{position:fixed;inset:0;background:rgba(7,11,17,0.88);z-index:6000;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity 0.3s;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#name-overlay.open{opacity:1;pointer-events:all}
+#name-card{width:100%;max-width:340px;background:var(--surf);border:1px solid var(--border2);border-radius:20px;padding:32px 24px calc(24px + var(--safe-bot));display:flex;flex-direction:column;align-items:center;gap:16px;transform:scale(0.92);transition:transform 0.3s cubic-bezier(0.32,0.72,0,1)}
+#name-overlay.open #name-card{transform:scale(1)}
+#name-card h2{font-family:var(--head);font-weight:800;font-size:1.3rem;color:var(--text);text-align:center;line-height:1.3}
+#name-card h2 em{font-style:normal;color:var(--amber)}
+#name-card p{font-size:0.72rem;color:var(--muted);text-align:center;line-height:1.8;letter-spacing:0.04em}
+#player-name-input{width:100%;height:50px;background:var(--surf2);border:1.5px solid var(--border2);border-radius:10px;color:var(--text);font-family:var(--mono);font-size:1rem;text-align:center;padding:0 16px;outline:none;-webkit-appearance:none}
+#player-name-input:focus{border-color:var(--accent)}
+#player-name-input::placeholder{color:var(--muted)}
+#name-submit-btn{width:100%;height:52px;background:var(--amber);border:none;border-radius:12px;color:#0b0f14;font-family:var(--mono);font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;touch-action:manipulation}
+#name-submit-btn:active{opacity:0.85}
+
+/* LEADERBOARD */
+#lb-overlay{position:fixed;inset:0;background:rgba(7,11,17,0.88);z-index:6000;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.3s;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#lb-overlay.open{opacity:1;pointer-events:all}
+#lb-card{width:100%;background:var(--surf);border-top:1px solid var(--border2);border-radius:20px 20px 0 0;padding:0 0 calc(16px + var(--safe-bot));max-height:80dvh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.32,0.72,0,1)}
+#lb-overlay.open #lb-card{transform:translateY(0)}
+#lb-header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:20px 20px 12px}
+#lb-header h2{font-family:var(--head);font-weight:800;font-size:1.15rem;color:var(--text)}
+#lb-header h2 em{font-style:normal;color:var(--amber)}
+#lb-close-btn{background:none;border:1px solid var(--border2);border-radius:8px;color:var(--muted);font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;padding:7px 12px;cursor:pointer;touch-action:manipulation}
+#lb-refresh-btn{background:none;border:none;color:var(--accent);font-family:var(--mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;padding:4px 8px;touch-action:manipulation}
+#lb-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 8px}
+.lb-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;margin-bottom:6px;background:var(--surf2);border:1px solid var(--border)}
+.lb-row.lb-me{border-color:var(--amber);background:rgba(255,184,48,0.06)}
+.lb-rank{font-size:1rem;width:28px;text-align:center;flex-shrink:0}
+.lb-name{flex:1;font-size:0.78rem;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-name em{font-style:normal;color:var(--amber);font-size:0.65rem}
+.lb-score{font-family:var(--head);font-weight:800;font-size:1.1rem;color:var(--amber);flex-shrink:0}
+.lb-loading{display:flex;justify-content:center;padding:32px}
+.lb-empty,.lb-error{text-align:center;color:var(--muted);font-size:0.75rem;padding:32px 16px;line-height:1.8}
 </style>
 </head>
 <body>
@@ -312,6 +380,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 </div>
 
 <script src="https://js.arcgis.com/4.29/"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 /* ═══════════════════════════════════════════
    CONFIGURATION
@@ -319,6 +388,8 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 const GLOBE_GLB_URL        = "https://trbaker.github.io/geogames/Nearky_Pangea.glb";
 const WEB_MAP_ID           = "359e7e596f6745558679fc9962d7ab72";
 const TRIGGER_DISTANCE_M   = 50;
+const SUPABASE_URL         = "https://dnoqkdtfrrpdgfjpvskq.supabase.co";
+const SUPABASE_ANON_KEY    = "sb_publishable_GgtHzHoUTxPdbzsCNwqOcg_7wR27SkM";
 
 const TARGETS = [
   { name: "Globie #1", lat: 38.912281, lng: -94.613686 },
@@ -337,6 +408,9 @@ let lastAcc         = 20;
 let lastDMSlat      = '';
 let lastDMSlng      = '';
 let score           = 0;
+let playerName      = localStorage.getItem('gc_player_name') || null;
+let playerId        = localStorage.getItem('gc_player_id')   || null;
+let sbClient        = null;
 let foundTargets    = new Set();
 let arPending       = false;
 let activeTarget    = null;
@@ -459,6 +533,7 @@ function updateScore() {
   var b = document.getElementById('score-badge');
   b.classList.add('bump');
   setTimeout(function() { b.classList.remove('bump'); }, 300);
+  sbUpsertScore();
 }
 
 /* ── TRACKING ── */
@@ -473,6 +548,10 @@ function toggleTracking() {
 function startTracking() {
   if (!navigator.geolocation) {
     showErr('Geolocation is not supported by this browser.');
+    return;
+  }
+  if (!playerName) {
+    openNameModal();
     return;
   }
 
@@ -692,8 +771,72 @@ function closeScorecard() {
   document.getElementById('scorecard-overlay').classList.remove('open');
 }
 
+/* ── SUPABASE ── */
+function initSupabase() {
+  if (window.supabase && !sbClient) {
+    sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
+}
+
+function sbUpsertScore() {
+  initSupabase();
+  if (!sbClient || !playerName) return;
+  if (!playerId) {
+    playerId = 'player_' + Math.random().toString(36).slice(2, 10) + '_' + Date.now();
+    localStorage.setItem('gc_player_id', playerId);
+  }
+  sbClient.from('scores')
+    .upsert({ id: playerId, player_name: playerName, score: score, updated_at: new Date().toISOString() },
+             { onConflict: 'id' })
+    .then(function(res) {
+      if (res.error) console.warn('Supabase upsert error:', res.error.message);
+    });
+}
+
 function openLeaderboard() {
-  showToast('Leaderboard coming soon!');
+  initSupabase();
+  if (!sbClient) { showToast('Leaderboard unavailable.'); return; }
+  var overlay = document.getElementById('lb-overlay');
+  overlay.classList.add('open');
+  loadLeaderboard();
+}
+
+function closeLeaderboard() {
+  document.getElementById('lb-overlay').classList.remove('open');
+}
+
+function loadLeaderboard() {
+  var list = document.getElementById('lb-list');
+  list.innerHTML = '<div class="lb-loading"><div class="map-spin"></div></div>';
+  sbClient.from('scores')
+    .select('player_name, score')
+    .order('score', { ascending: false })
+    .limit(20)
+    .then(function(res) {
+      if (res.error) {
+        list.innerHTML = '<div class="lb-error">Could not load scores.</div>';
+        return;
+      }
+      if (!res.data || res.data.length === 0) {
+        list.innerHTML = '<div class="lb-empty">No scores yet. Be the first!</div>';
+        return;
+      }
+      var html = '';
+      res.data.forEach(function(row, i) {
+        var medal = i === 0 ? '&#127947;' : i === 1 ? '&#129352;' : i === 2 ? '&#129353;' : (i + 1) + '.';
+        var isMe = row.player_name === playerName;
+        html += '<div class="lb-row' + (isMe ? ' lb-me' : '') + '">' +
+          '<span class="lb-rank">' + medal + '</span>' +
+          '<span class="lb-name">' + escHtml(row.player_name) + (isMe ? ' <em>(you)</em>' : '') + '</span>' +
+          '<span class="lb-score">' + row.score + '</span>' +
+          '</div>';
+      });
+      list.innerHTML = html;
+    });
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 /* ── SCREENSHOT ── */
@@ -802,5 +945,40 @@ function flashSaved(btn, origHTML) {
   setTimeout(function() { btn.innerHTML = origHTML; }, 2200);
 }
 </script>
+
+<!-- NAME ENTRY MODAL -->
+<div id="name-overlay" role="dialog" aria-modal="true">
+  <div id="name-card">
+    <div class="modal-globe-icon">
+      <svg width="32" height="32" viewBox="0 0 36 36" fill="none">
+        <circle cx="18" cy="18" r="15" stroke="#ffb830" stroke-width="1.5"/>
+        <ellipse cx="18" cy="18" rx="7" ry="15" stroke="#ffb830" stroke-width="1.2"/>
+        <line x1="3" y1="18" x2="33" y2="18" stroke="#ffb830" stroke-width="1.2"/>
+        <path d="M5 10 Q18 14 31 10" stroke="#ffb830" stroke-width="1" fill="none"/>
+        <path d="M5 26 Q18 22 31 26" stroke="#ffb830" stroke-width="1" fill="none"/>
+      </svg>
+    </div>
+    <h2>Welcome to<br><em>GlobeCatcher AR</em></h2>
+    <p>Enter your name for the leaderboard</p>
+    <input id="player-name-input" type="text" maxlength="24"
+           placeholder="Your name" autocomplete="off" autocorrect="off"
+           autocapitalize="words" spellcheck="false">
+    <button id="name-submit-btn" onclick="submitName()">Let's Go &#8594;</button>
+  </div>
+</div>
+
+<!-- LEADERBOARD MODAL -->
+<div id="lb-overlay" role="dialog" aria-modal="true">
+  <div id="lb-card">
+    <div id="lb-header">
+      <h2>&#127942; <em>Leaderboard</em></h2>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button id="lb-refresh-btn" onclick="loadLeaderboard()">&#8635; Refresh</button>
+        <button id="lb-close-btn" onclick="closeLeaderboard()">Close</button>
+      </div>
+    </div>
+    <div id="lb-list"></div>
+  </div>
+</div>
 </body>
 </html>
