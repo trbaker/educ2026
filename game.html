@@ -229,7 +229,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
         <path d="M5 26 Q18 22 31 26" stroke="#ffb830" stroke-width="1" fill="none"/>
       </svg>
     </div>
-    <div class="modal-title"><em>Globie</em> detected!</div>
+    <div class="modal-title"><em>Globe</em> detected!</div>
     <div class="modal-sub" id="modal-target-name"></div>
     <div class="modal-dist" id="modal-dist"></div>
     <button id="ar-btn" onclick="launchAR()">
@@ -238,7 +238,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
         <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
         <line x1="12" y1="22.08" x2="12" y2="12"/>
       </svg>
-      View Globie AR Object
+      View Globe AR Object
     </button>
     <button id="dismiss-btn" onclick="dismissModal()">Dismiss</button>
   </div>
@@ -255,14 +255,14 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
         <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
         <line x1="12" y1="22.08" x2="12" y2="12"/>
       </svg>
-      Globie AR Viewer
+      Globe AR Viewer
     </div>
-    <button id="ar-close-btn" onclick="closeAR()">&#10003;&nbsp; Done &mdash; Collect Globie</button>
+    <button id="ar-close-btn" onclick="closeAR()">&#10003;&nbsp; Done &mdash; Collect Globe</button>
   </div>
   <model-viewer
     id="the-model-viewer"
     src="https://trbaker.github.io/geogames/Nearky_Pangea.glb"
-    alt="A 3D Globie"
+    alt="A 3D Globe"
     ar ar-modes="webxr scene-viewer quick-look"
     ar-scale="fixed" camera-controls auto-rotate
     auto-rotate-delay="0" rotation-per-second="20deg"
@@ -276,9 +276,9 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
         <circle cx="12" cy="12" r="3"/>
         <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
       </svg>
-      Place Globie in Real World
+      Place Globe in Real World
     </button>
-    <div class="ar-hint-text">Tap to activate camera &amp; place the Globie in your surroundings</div>
+    <div class="ar-hint-text">Tap to activate camera &amp; place the Globe in your surroundings</div>
     <div id="ar-not-supported">AR not supported on this device.<br>Try Chrome on Android or Safari on iOS 12+.</div>
   </div>
 </div>
@@ -296,8 +296,8 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
           <path d="M5 26 Q18 22 31 26" stroke="#ffb830" stroke-width="1" fill="none"/>
         </svg>
       </div>
-      <div class="sc-heading">I found <em>Globie</em><br>at the EdSummit</div>
-      <div class="sc-found-label">Globies discovered</div>
+      <div class="sc-heading">I found <em>Globe</em><br>at the EdSummit</div>
+      <div class="sc-found-label">Globes discovered</div>
       <div class="sc-count" id="sc-count-display">0</div>
       <div class="sc-globe-label">out of <span id="sc-total">0</span> total</div>
       <div class="sc-watermark">GlobeCatcher AR &middot; EdSummit 2025</div>
@@ -361,9 +361,14 @@ var GLOBE_GLB_URL     = "https://trbaker.github.io/geogames/Nearky_Pangea.glb";
 var WEB_MAP_ID        = "359e7e596f6745558679fc9962d7ab72";
 var TRIGGER_DIST_M    = 50;
 
+// TARGETS — add all 15 here when ready.
+// active: true  = shown on map and triggers proximity alert
+// active: false = hidden, not yet available to players
 var TARGETS = [
-  { name: "Globie #1", lat: 38.912281, lng: -94.613686 }
-  // more targets coming...
+  { id: "globe_01", name: "Globe #1",  lat: 38.912281, lng: -94.613686, active: true  },
+  // { id: "globe_02", name: "Globe #2",  lat: 0.000000,  lng: 0.000000,  active: false },
+  // { id: "globe_03", name: "Globe #3",  lat: 0.000000,  lng: 0.000000,  active: false },
+  // ... add remaining targets here
 ];
 /* ===================================================== */
 
@@ -384,6 +389,26 @@ var activeTarget    = null;
 var mapCentered     = false;
 var playerName      = localStorage.getItem('gc_player_name') || null;
 var playerId        = localStorage.getItem('gc_player_id')   || null;
+// If stored ID is not a valid UUID (e.g. old gc_xxx format), clear it
+if (playerId && !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(playerId)) {
+  playerId = null;
+  localStorage.removeItem('gc_player_id');
+}
+
+// foundTargets: persisted to localStorage — keyed by target id string
+// Prevents the same Globe being collected more than once per device
+function loadFoundTargets() {
+  try {
+    return JSON.parse(localStorage.getItem('gc_found') || '{}');
+  } catch(e) { return {}; }
+}
+function saveFoundTargets() {
+  localStorage.setItem('gc_found', JSON.stringify(foundTargets));
+}
+var foundTargets = loadFoundTargets();
+
+// Score = number of unique Globes found (recalculated from foundTargets)
+score = Object.keys(foundTargets).length;
 
 /* ── SUPABASE REST (no SDK — plain fetch) ── */
 function sbFetch(path, method, body) {
@@ -399,10 +424,19 @@ function sbFetch(path, method, body) {
   return fetch(SUPABASE_URL + '/rest/v1/' + path, opts);
 }
 
+function generateUUID() {
+  // RFC 4122 UUID v4
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0;
+    var v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 function sbUpsertScore() {
   if (!playerName) return;
   if (!playerId) {
-    playerId = 'gc_' + Math.random().toString(36).slice(2,10) + '_' + Date.now();
+    playerId = generateUUID();
     localStorage.setItem('gc_player_id', playerId);
   }
   setSyncStatus('saving');
@@ -545,10 +579,12 @@ function haversine(lat1, lng1, lat2, lng2) {
 /* PROXIMITY */
 function checkProximity(lat, lng) {
   for (var i = 0; i < TARGETS.length; i++) {
-    if (foundTargets[i]) continue;
-    var d = haversine(lat, lng, TARGETS[i].lat, TARGETS[i].lng);
+    var t = TARGETS[i];
+    if (!t.active) continue;                 // skip inactive targets
+    if (foundTargets[t.id]) continue;        // already collected
+    var d = haversine(lat, lng, t.lat, t.lng);
     if (d <= TRIGGER_DIST_M) {
-      showModal(TARGETS[i], i, Math.round(d));
+      showModal(t, i, Math.round(d));
       return;
     }
   }
@@ -559,8 +595,11 @@ function showModal(target, idx, distM) {
   activeTarget = { target: target, idx: idx };
   document.getElementById('modal-target-name').textContent = target.name;
   document.getElementById('modal-dist').innerHTML =
-    'You are <strong>' + distM + ' m</strong> from this Globie';
+    'You are <strong>' + distM + ' m</strong> from this Globe';
   document.getElementById('modal-overlay').classList.add('open');
+}
+function isAlreadyFound(target) {
+  return !!foundTargets[target.id];
 }
 function dismissModal() {
   document.getElementById('modal-overlay').classList.remove('open');
@@ -590,10 +629,14 @@ function closeAR() {
   document.getElementById('ar-viewer').classList.remove('open');
   if (arPending && activeTarget !== null) {
     arPending = false;
-    foundTargets[activeTarget.idx] = true;
-    score++;
-    updateScore();
-    showToast('+1  ' + activeTarget.target.name + ' found!');
+    var tid = activeTarget.target.id;
+    if (!foundTargets[tid]) {              // safety: only count once
+      foundTargets[tid] = true;
+      saveFoundTargets();
+      score = Object.keys(foundTargets).length;  // recalculate from source of truth
+      updateScore();
+      showToast('+1  ' + activeTarget.target.name + ' found!');
+    }
     activeTarget = null;
   }
   if (lastLat !== null && window._plotPosition) {
@@ -700,7 +743,7 @@ function submitName() {
   playerName = val;
   localStorage.setItem('gc_player_name', playerName);
   if (!playerId) {
-    playerId = 'gc_' + Math.random().toString(36).slice(2,10) + '_' + Date.now();
+    playerId = generateUUID();
     localStorage.setItem('gc_player_id', playerId);
   }
   document.getElementById('name-overlay').classList.remove('open');
@@ -716,7 +759,8 @@ document.addEventListener('DOMContentLoaded', function() {
 /* SCORECARD */
 function openScorecard() {
   document.getElementById('sc-count-display').textContent = score;
-  document.getElementById('sc-total').textContent = TARGETS.length;
+  var activeCount = TARGETS.filter(function(t){ return t.active; }).length;
+  document.getElementById('sc-total').textContent = activeCount;
   document.getElementById('scorecard-overlay').classList.add('open');
 }
 function closeScorecard() {
@@ -763,7 +807,7 @@ function drawScorecard() {
   ctx.restore();
   ctx.textAlign='center';
   ctx.fillStyle='#e8f2ff'; ctx.font='bold 20px sans-serif'; ctx.fillText('I found',cx,ringY+r+36);
-  ctx.fillStyle='#ffb830'; ctx.font='bold 26px sans-serif'; ctx.fillText('Globie',cx,ringY+r+66);
+  ctx.fillStyle='#ffb830'; ctx.font='bold 26px sans-serif'; ctx.fillText('Globe',cx,ringY+r+66);
   ctx.fillStyle='#e8f2ff'; ctx.font='bold 18px sans-serif'; ctx.fillText('at the EdSummit',cx,ringY+r+92);
   ctx.fillStyle='#5d7a96'; ctx.font='11px monospace'; ctx.fillText('GLOBIES DISCOVERED',cx,ringY+r+126);
   ctx.shadowColor='rgba(255,184,48,0.4)'; ctx.shadowBlur=32;
@@ -815,10 +859,20 @@ if (typeof require !== 'undefined') {
       document.getElementById('placeholder').classList.add('gone');
       setPill('on','Map ready');
       TARGETS.forEach(function(t) {
+        if (!t.active) return;
+        var collected = !!foundTargets[t.id];
         view.graphics.add(new Graphic({
           geometry: new Point({ latitude:t.lat, longitude:t.lng }),
-          symbol: new SimpleMarkerSymbol({ style:'circle', color:[255,184,48,0.9], size:12, outline:{color:[255,255,255,0.7],width:1.5} }),
-          popupTemplate: { title:t.name, content:'Lat: '+t.lat+'\u00b0, Lng: '+t.lng+'\u00b0' }
+          symbol: new SimpleMarkerSymbol({
+            style: 'circle',
+            color: collected ? [140,140,140,0.6] : [255,184,48,0.9],
+            size: 12,
+            outline: { color:[255,255,255,0.7], width:1.5 }
+          }),
+          popupTemplate: {
+            title:   t.name + (collected ? ' (collected)' : ''),
+            content: 'Lat: '+t.lat+'°, Lng: '+t.lng+'°'
+          }
         }));
       });
       if (lastLat !== null && window._plotPosition) window._plotPosition(lastLat,lastLng,lastAcc);
