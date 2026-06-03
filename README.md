@@ -14,4 +14,7 @@ User has enabled tracking - essentailly normal "hunting for globes" mode.
 This images shows what a user sees after they have found and collected a globe.
 
 
-<img src="images/3_identify_collected_point.png">
+<img src="images/4_leader_board.png">
+This screen shows the "leader board" - a list of people who have found the most globes. In this screen, two usres are shown. Each user has collected one globe.
+
+
