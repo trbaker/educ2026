@@ -241,8 +241,24 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 .lb-empty,.lb-error{text-align:center;color:var(--muted);font-size:0.75rem;padding:32px 16px;line-height:1.8}
 
 
-#about-overlay.about-open { opacity:1 !important; pointer-events:all !important; }
-#about-card.about-open    { transform:translateY(0) !important; }
+/* ABOUT MODAL */
+#about-overlay {
+  position:fixed; inset:0; background:rgba(7,11,17,0.82); z-index:5500;
+  display:none; align-items:flex-end;
+  -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
+}
+#about-overlay.open {
+  display:flex;
+}
+#about-card {
+  width:100%; background:var(--surf);
+  border-top:1px solid var(--border2);
+  border-radius:20px 20px 0 0;
+  padding:28px 24px calc(32px + var(--safe-bot));
+  transform:translateY(100%);
+  transition:transform 0.35s cubic-bezier(0.32,0.72,0,1);
+}
+#about-overlay.open #about-card { transform:translateY(0); }
 </style>
 </head>
 <body>
@@ -1198,16 +1214,10 @@ setPill = function(cls, txt) {
 function openAboutModal() {
   var vEl = document.getElementById('about-version');
   if (vEl) vEl.textContent = 'GeoCatcher AR v' + APP_VERSION;
-  var o = document.getElementById('about-overlay');
-  var c = document.getElementById('about-card');
-  o.style.opacity = '0'; o.style.pointerEvents = 'none';
-  o.style.opacity = '';  o.style.pointerEvents = '';
-  o.classList.add('about-open');
-  c.classList.add('about-open');
+  document.getElementById('about-overlay').classList.add('open');
 }
 function closeAboutModal() {
-  document.getElementById('about-overlay').classList.remove('about-open');
-  document.getElementById('about-card').classList.remove('about-open');
+  document.getElementById('about-overlay').classList.remove('open');
 }
 </script>
 
@@ -1252,9 +1262,22 @@ function closeAboutModal() {
 </div>
 
 <!-- ABOUT MODAL -->
-<div id="about-overlay" style="position:fixed;inset:0;background:rgba(7,11,17,0.82);z-index:5500;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.3s;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)">
-  <div id="about-card" style="width:100%;background:var(--surf);border-top:1px solid var(--border2);border-radius:20px 20px 0 0;padding:28px 24px calc(32px + var(--safe-bot));transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.32,0.72,0,1)">
+<div id="about-overlay">
+  <div id="about-card">
     <div style="width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 20px"></div>
+    <h3 style="font-family:var(--head);font-weight:800;font-size:1.1rem;color:var(--text);margin-bottom:18px">
+      About <em style="font-style:normal;color:var(--accent)">GeoCatcher AR</em>
+    </h3>
+    <p style="font-size:0.78rem;color:var(--muted);line-height:1.9;letter-spacing:0.03em">
+      This app was vibe-coded with <a href="https://claude.ai" target="_blank" style="color:var(--accent);text-decoration:none">Claude.ai</a>
+      and uses <a href="https://services.arcgisonline.com" target="_blank" style="color:var(--accent);text-decoration:none">ArcGIS REST services</a>.
+    </p>
+    <p id="about-version" style="font-size:0.72rem;color:var(--muted);margin-top:12px;letter-spacing:0.06em"></p>
+    <!-- room for additional content -->
+    <div style="min-height:32px"></div>
+    <button onclick="closeAboutModal()" style="margin-top:8px;width:100%;height:48px;background:none;border:1px solid var(--border2);border-radius:10px;color:var(--muted);font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;touch-action:manipulation">Close</button>
+  </div>
+</div>
     <h3 style="font-family:var(--head);font-weight:800;font-size:1.1rem;color:var(--text);margin-bottom:18px">
       About <em style="font-style:normal;color:var(--accent)">GeoCatcher AR</em>
     </h3>
