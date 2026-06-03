@@ -677,9 +677,14 @@ function escHtml(s) {
 
 /* HELPERS */
 function setPill(cls, txt) {
-  var p = document.getElementById('pill');
-  p.className = 'pill' + (cls ? ' ' + cls : '');
-  document.getElementById('pill-txt').textContent = txt;
+  // Update menu dot colour
+  var dot  = document.getElementById('menu-dot');
+  var sdot = document.getElementById('status-dot');
+  var dotCls = cls === 'on' ? 'on' : cls === 'err' ? 'err' : '';
+  if (dot)  dot.className  = dotCls;
+  if (sdot) sdot.className = 'menu-item-dot ' + dotCls;
+  // Store current state for Status modal
+  setPill._state = { cls: cls, txt: txt };
 }
 function showErr(msg) {
   var e = document.getElementById('err-box');
@@ -1199,16 +1204,7 @@ function closeStatusModal() {
   document.getElementById('status-overlay').classList.remove('open');
 }
 
-/* Keep menu dot in sync with app state via setPill */
-var _origSetPill = setPill;
-setPill = function(cls, txt) {
-  _origSetPill(cls, txt);
-  var dot    = document.getElementById('menu-dot');
-  var sdot   = document.getElementById('status-dot');
-  var dotCls = cls === 'on' ? 'on' : cls === 'err' ? 'err' : '';
-  if (dot)  { dot.className  = dotCls; }
-  if (sdot) { sdot.className = 'menu-item-dot ' + dotCls; }
-};
+/* setPill is defined above — no override needed */
 
 /* ── ABOUT MODAL ── */
 function openAboutModal() {
@@ -1265,19 +1261,6 @@ function closeAboutModal() {
 <div id="about-overlay">
   <div id="about-card">
     <div style="width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 20px"></div>
-    <h3 style="font-family:var(--head);font-weight:800;font-size:1.1rem;color:var(--text);margin-bottom:18px">
-      About <em style="font-style:normal;color:var(--accent)">GeoCatcher AR</em>
-    </h3>
-    <p style="font-size:0.78rem;color:var(--muted);line-height:1.9;letter-spacing:0.03em">
-      This app was vibe-coded with <a href="https://claude.ai" target="_blank" style="color:var(--accent);text-decoration:none">Claude.ai</a>
-      and uses <a href="https://services.arcgisonline.com" target="_blank" style="color:var(--accent);text-decoration:none">ArcGIS REST services</a>.
-    </p>
-    <p id="about-version" style="font-size:0.72rem;color:var(--muted);margin-top:12px;letter-spacing:0.06em"></p>
-    <!-- room for additional content -->
-    <div style="min-height:32px"></div>
-    <button onclick="closeAboutModal()" style="margin-top:8px;width:100%;height:48px;background:none;border:1px solid var(--border2);border-radius:10px;color:var(--muted);font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;touch-action:manipulation">Close</button>
-  </div>
-</div>
     <h3 style="font-family:var(--head);font-weight:800;font-size:1.1rem;color:var(--text);margin-bottom:18px">
       About <em style="font-style:normal;color:var(--accent)">GeoCatcher AR</em>
     </h3>
