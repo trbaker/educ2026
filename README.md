@@ -7,6 +7,6 @@ This is a mobile game that uses location to find AR objects within a defined are
 This shows the start screen without tracking enabled.
 
 
-![Image 1](images/1_start.png)
-![Image 1](images/1_start.png)
-![Image 1](images/1_start.png)
+<img src="images/2_home_with_tracking.png">
+User has enabled tracking - essentailly normal "hunting for globes" mode.
+
