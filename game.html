@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0b0f14">
-<title>GlobeCatcher AR</title>
+<title>GeoCatcher AR</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/dark/main.css">
@@ -73,6 +73,109 @@ function adminReset() {
 
   showToast('Reset complete — ready to start over');
 }
+
+/* ── DROPDOWN MENU ── */
+function toggleMenu() {
+  var btn  = document.getElementById('menu-btn');
+  var drop = document.getElementById('menu-dropdown');
+  var open = drop.classList.contains('open');
+  if (open) { closeMenu(); } else {
+    btn.classList.add('open');
+    drop.classList.add('open');
+  }
+}
+function closeMenu() {
+  document.getElementById('menu-btn').classList.remove('open');
+  document.getElementById('menu-dropdown').classList.remove('open');
+}
+// Close menu if tapping outside
+document.addEventListener('click', function(e) {
+  var wrap = document.getElementById('menu-wrap');
+  if (wrap && !wrap.contains(e.target)) closeMenu();
+});
+
+/* ── STATUS MODAL ── */
+function openStatusModal() {
+  try {
+    // GPS
+    var gpsEl = document.getElementById('st-gps');
+    if (watchId !== null && watchId !== undefined) {
+      gpsEl.textContent = 'Active'; gpsEl.className = 'status-val ok';
+    } else {
+      gpsEl.textContent = 'Inactive'; gpsEl.className = 'status-val dim';
+    }
+    // Map
+    var mapEl = document.getElementById('st-map');
+    if (typeof view !== 'undefined' && view && view.ready) {
+      mapEl.textContent = 'Loaded'; mapEl.className = 'status-val ok';
+    } else {
+      mapEl.textContent = 'Unavailable'; mapEl.className = 'status-val dim';
+    }
+    // Player
+    var plEl = document.getElementById('st-player');
+    plEl.textContent = playerName || 'Not set';
+    plEl.className   = playerName ? 'status-val ok' : 'status-val dim';
+    // Score
+    document.getElementById('st-score').textContent = (typeof score !== 'undefined') ? score : 0;
+    // Globes found
+    var activeCount = (typeof TARGETS !== 'undefined')
+      ? TARGETS.filter(function(t){ return t.active; }).length : 0;
+    var foundCount = (typeof foundTargets !== 'undefined')
+      ? Object.keys(foundTargets).length : 0;
+    document.getElementById('st-found').textContent = foundCount + ' of ' + activeCount;
+    // Sync
+    var syncEl  = document.getElementById('st-sync');
+    var syncEl2 = document.getElementById('sync-status');
+    var syncTxt = syncEl2 ? syncEl2.textContent : '';
+    if (syncTxt.indexOf('Synced') >= 0) {
+      syncEl.textContent = 'Synced'; syncEl.className = 'status-val ok';
+    } else if (syncTxt.indexOf('error') >= 0) {
+      syncEl.textContent = 'Error';  syncEl.className = 'status-val err';
+    } else {
+      syncEl.textContent = (typeof playerId !== 'undefined' && playerId) ? 'Pending' : 'Not started';
+      syncEl.className   = 'status-val dim';
+    }
+    // Location
+    var locEl = document.getElementById('st-loc');
+    if (typeof lastLat !== 'undefined' && lastLat !== null) {
+      locEl.textContent = lastLat.toFixed(5) + ', ' + lastLng.toFixed(5);
+      locEl.className   = 'status-val ok';
+    } else {
+      locEl.textContent = 'Unknown'; locEl.className = 'status-val dim';
+    }
+  } catch(e) {
+    console.warn('Status modal error:', e.message);
+  }
+  document.getElementById('status-overlay').classList.add('open');
+}
+function closeStatusModal() {
+  document.getElementById('status-overlay').classList.remove('open');
+}
+
+/* Keep menu dot in sync with app state via setPill */
+var _origSetPill = setPill;
+setPill = function(cls, txt) {
+  _origSetPill(cls, txt);
+  var dot    = document.getElementById('menu-dot');
+  var sdot   = document.getElementById('status-dot');
+  var dotCls = cls === 'on' ? 'on' : cls === 'err' ? 'err' : '';
+  if (dot)  { dot.className  = dotCls; }
+  if (sdot) { sdot.className = 'menu-item-dot ' + dotCls; }
+};
+
+/* ── ABOUT MODAL ── */
+function openAboutModal() {
+  var o = document.getElementById('about-overlay');
+  var c = document.getElementById('about-card');
+  o.style.opacity = '0'; o.style.pointerEvents = 'none';
+  o.style.opacity = '';  o.style.pointerEvents = '';
+  o.classList.add('about-open');
+  c.classList.add('about-open');
+}
+function closeAboutModal() {
+  document.getElementById('about-overlay').classList.remove('about-open');
+  document.getElementById('about-card').classList.remove('about-open');
+}
 </script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -91,16 +194,108 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 .logo{font-family:var(--head);font-weight:800;font-size:1.2rem;letter-spacing:-0.02em;flex-shrink:0}
 .logo em{font-style:normal;color:var(--accent)}
 .header-right{display:flex;align-items:center;gap:8px}
-#trophy-btn{display:flex;align-items:center;justify-content:center;width:34px;height:34px;background:rgba(255,184,48,0.08);border:1px solid rgba(255,184,48,0.28);border-radius:8px;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none;flex-shrink:0}
-#trophy-btn:active{background:rgba(255,184,48,0.18)}
+
 .score-badge{display:flex;align-items:center;gap:6px;background:rgba(255,184,48,0.1);border:1px solid rgba(255,184,48,0.35);border-radius:999px;padding:4px 11px;font-size:0.68rem;font-weight:700;letter-spacing:0.06em;color:var(--amber);cursor:pointer;transition:transform 0.15s;-webkit-user-select:none;user-select:none}
 .score-badge.bump{transform:scale(1.18)}
-.pill{display:flex;align-items:center;gap:6px;font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border2);padding:4px 10px;border-radius:999px;transition:color 0.35s,border-color 0.35s;white-space:nowrap}
-.pill.on{color:var(--green);border-color:var(--green)}
-.pill.err{color:var(--warn);border-color:var(--warn)}
-.dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
-.pill.on .dot{animation:blink 1.6s ease-in-out infinite}
+/* DROPDOWN MENU */
+#menu-wrap { position:relative; flex-shrink:0; }
+
+#menu-btn {
+  display:flex; align-items:center; gap:6px;
+  background:var(--surf2); border:1px solid var(--border2);
+  border-radius:8px; padding:6px 10px;
+  color:var(--text); font-family:var(--mono);
+  font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase;
+  cursor:pointer; touch-action:manipulation;
+  -webkit-user-select:none; user-select:none;
+  transition:border-color 0.2s;
+  white-space:nowrap;
+}
+#menu-btn:active { border-color:var(--accent); }
+#menu-btn.open { border-color:var(--accent); }
+
+#menu-dot {
+  width:7px; height:7px; border-radius:50%;
+  background:var(--muted); flex-shrink:0;
+  transition:background 0.3s;
+}
+#menu-dot.on  { background:var(--green); animation:blink 1.6s ease-in-out infinite; }
+#menu-dot.err { background:var(--warn);  animation:none; }
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+#menu-chevron { transition:transform 0.2s; color:var(--muted); flex-shrink:0; }
+#menu-btn.open #menu-chevron { transform:rotate(180deg); }
+
+#menu-dropdown {
+  position:absolute; top:calc(100% + 6px); right:0;
+  background:var(--surf); border:1px solid var(--border2);
+  border-radius:10px; min-width:160px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.4);
+  overflow:hidden; z-index:1200;
+  opacity:0; pointer-events:none;
+  transform:translateY(-6px);
+  transition:opacity 0.18s, transform 0.18s;
+}
+#menu-dropdown.open { opacity:1; pointer-events:all; transform:translateY(0); }
+
+.menu-item {
+  width:100%; display:flex; align-items:center; gap:10px;
+  background:none; border:none; border-bottom:1px solid var(--border);
+  color:var(--text); font-family:var(--mono);
+  font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase;
+  padding:13px 16px; cursor:pointer; touch-action:manipulation;
+  text-align:left; transition:background 0.15s;
+}
+.menu-item:last-child { border-bottom:none; }
+.menu-item:active { background:var(--surf2); }
+.menu-item-dot {
+  width:7px; height:7px; border-radius:50%;
+  background:var(--muted); flex-shrink:0;
+}
+.menu-item-dot.on  { background:var(--green); }
+.menu-item-dot.err { background:var(--warn); }
+
+/* STATUS MODAL */
+#status-overlay {
+  position:fixed; inset:0; background:rgba(7,11,17,0.82); z-index:5500;
+  display:flex; align-items:flex-end;
+  opacity:0; pointer-events:none; transition:opacity 0.3s;
+  -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
+}
+#status-overlay.open { opacity:1; pointer-events:all; }
+#status-card {
+  width:100%; background:var(--surf);
+  border-top:1px solid var(--border2);
+  border-radius:20px 20px 0 0;
+  padding:24px 20px calc(24px + var(--safe-bot));
+  transform:translateY(100%);
+  transition:transform 0.35s cubic-bezier(0.32,0.72,0,1);
+}
+#status-overlay.open #status-card { transform:translateY(0); }
+#status-card h3 {
+  font-family:var(--head); font-weight:800; font-size:1.1rem;
+  color:var(--text); margin-bottom:16px;
+}
+#status-card h3 em { font-style:normal; color:var(--accent); }
+.status-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:10px 0; border-bottom:1px solid var(--border);
+  font-size:0.72rem;
+}
+.status-row:last-of-type { border-bottom:none; }
+.status-key { color:var(--muted); letter-spacing:0.06em; text-transform:uppercase; font-size:0.65rem; }
+.status-val { color:var(--text); font-weight:700; text-align:right; }
+.status-val.ok  { color:var(--green); }
+.status-val.err { color:var(--warn); }
+.status-val.dim { color:var(--muted); }
+#status-close {
+  margin-top:18px; width:100%; height:48px;
+  background:none; border:1px solid var(--border2); border-radius:10px;
+  color:var(--muted); font-family:var(--mono); font-size:0.72rem;
+  letter-spacing:0.1em; text-transform:uppercase;
+  cursor:pointer; touch-action:manipulation;
+}
+#status-close:active { opacity:0.6; }
 #map-wrap{flex-shrink:0;position:relative;height:52dvh;min-height:240px;background:#0d1520}
 #viewDiv{width:100%;height:100%;padding:0;margin:0}
 .map-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#0d1520;z-index:400;transition:opacity 0.45s;pointer-events:none}
@@ -211,44 +406,48 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 .lb-loading{display:flex;justify-content:center;padding:32px}
 .lb-empty,.lb-error{text-align:center;color:var(--muted);font-size:0.75rem;padding:32px 16px;line-height:1.8}
 
-/* ADMIN BUTTON */
-#admin-btn {
-  position: fixed;
-  bottom: calc(90px + var(--safe-bot));
-  right: 16px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 8px;
-  color: rgba(255,255,255,0.2);
-  font-family: var(--mono);
-  font-size: 0.55rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 5px 9px;
-  cursor: pointer;
-  touch-action: manipulation;
-  z-index: 100;
-}
-#admin-btn:active { background: rgba(255,80,80,0.15); border-color: var(--warn); color: var(--warn); }
+
+#about-overlay.about-open { opacity:1 !important; pointer-events:all !important; }
+#about-card.about-open    { transform:translateY(0) !important; }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">Globe<em>Catcher AR</em></div>
+  <div class="logo">Geo<em>Catcher AR</em></div>
   <div class="header-right">
-    <button id="trophy-btn" onclick="openLeaderboard()" aria-label="Leaderboard">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffb830" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M6 9H4a2 2 0 00-2 2v1a4 4 0 004 4h.5"/>
-        <path d="M18 9h2a2 2 0 012 2v1a4 4 0 01-4 4h-.5"/>
-        <path d="M8 21h8"/><path d="M12 17v4"/>
-        <path d="M6 3h12l1 6a7 7 0 01-14 0L6 3z"/>
-      </svg>
-    </button>
+
     <div class="score-badge" id="score-badge" onclick="openScorecard()" role="button">
       &#9733; <span id="score-num">0</span>
     </div>
-    <div class="pill" id="pill"><div class="dot"></div><span id="pill-txt">Ready</span></div>
+    <div id="menu-wrap">
+      <button id="menu-btn" onclick="toggleMenu()" aria-label="Menu">
+        <span id="menu-dot"></span>
+        <span id="menu-label">Menu</span>
+        <svg id="menu-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none">
+          <polyline points="2,3 5,7 8,3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div id="menu-dropdown">
+        <button class="menu-item" onclick="openLeaderboard(); closeMenu()">
+          <span class="menu-item-dot"></span>
+          Leaderboard
+        </button>
+        <button class="menu-item" onclick="openStatusModal(); closeMenu()">
+          <span class="menu-item-dot" id="status-dot"></span>
+          Status
+        </button>
+        <button class="menu-item" style="color:var(--warn)" onclick="adminReset(); closeMenu()">
+          <span class="menu-item-dot err"></span>
+          Reset App
+        </button>
+        <button class="menu-item" onclick="openAboutModal(); closeMenu()">
+          <span class="menu-item-dot"></span>
+          About
+        </button>
+        <!-- additional menu items will go here -->
+      </div>
+    </div>
   </div>
 </header>
 
@@ -383,7 +582,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
       <div class="sc-found-label">Globes discovered</div>
       <div class="sc-count" id="sc-count-display">0</div>
       <div class="sc-globe-label">out of <span id="sc-total">0</span> total</div>
-      <div class="sc-watermark">GlobeCatcher AR &middot; EdSummit 2025</div>
+      <div class="sc-watermark">GeoCatcher AR &middot; EdSummit 2025</div>
     </div>
     <div id="scorecard-actions">
       <button id="sc-close-btn" onclick="closeScorecard()">Close</button>
@@ -410,7 +609,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
         <path d="M5 26 Q18 22 31 26" stroke="#ffb830" stroke-width="1" fill="none"/>
       </svg>
     </div>
-    <h2>Welcome to<br><em>GlobeCatcher AR</em></h2>
+    <h2>Welcome to<br><em>GeoCatcher AR</em></h2>
     <p>Enter your name for the leaderboard</p>
     <input id="player-name-input" type="text" maxlength="24"
            placeholder="Your name" autocomplete="off" autocorrect="off"
@@ -898,7 +1097,7 @@ function drawScorecard() {
   ctx.shadowBlur=0;
   ctx.fillStyle='#5d7a96'; ctx.font='11px monospace'; ctx.fillText('OUT OF '+TARGETS.length+' TOTAL',cx,ringY+r+272);
   ctx.fillStyle='rgba(93,122,150,0.4)'; ctx.font='10px monospace';
-  ctx.fillText('GlobeCatcher AR - EdSummit 2025',cx,H-22);
+  ctx.fillText('GeoCatcher AR - EdSummit 2025',cx,H-22);
   return c;
 }
 function shareOrDownload(canvas,btn,orig) {
@@ -906,7 +1105,7 @@ function shareOrDownload(canvas,btn,orig) {
     if (!blob) { btn.classList.remove('saving'); btn.innerHTML=orig; alert('Screenshot failed.'); return; }
     var file=new File([blob],'globecatcher-score.png',{type:'image/png'});
     if (navigator.canShare && navigator.canShare({files:[file]})) {
-      navigator.share({files:[file],title:'My GlobeCatcher AR Score'})
+      navigator.share({files:[file],title:'My GeoCatcher AR Score'})
         .then(function(){flashSaved(btn,orig)}).catch(function(){flashSaved(btn,orig)});
       return;
     }
@@ -986,7 +1185,7 @@ if (typeof require !== 'undefined') {
       document.getElementById('map-loading').classList.remove('show');
     };
   });
-} else { setPill('err','SDK unavailable'); }
+} else { setPill('','Map offline'); }
 
 /* model-viewer AR status */
 document.addEventListener('DOMContentLoaded', function() {
@@ -1000,7 +1199,61 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<!-- ADMIN RESET (testing only) -->
-<button id="admin-btn" onclick="adminReset()">Admin</button>
+<!-- STATUS MODAL -->
+<div id="status-overlay">
+  <div id="status-card">
+    <h3>App <em>Status</em></h3>
+    <div class="status-row">
+      <span class="status-key">App</span>
+      <span class="status-val ok">GeoCatcher AR</span>
+    </div>
+    <div class="status-row">
+      <span class="status-key">GPS Tracking</span>
+      <span class="status-val dim" id="st-gps">Inactive</span>
+    </div>
+    <div class="status-row">
+      <span class="status-key">Map</span>
+      <span class="status-val dim" id="st-map">Loading...</span>
+    </div>
+    <div class="status-row">
+      <span class="status-key">Player</span>
+      <span class="status-val dim" id="st-player">Not set</span>
+    </div>
+    <div class="status-row">
+      <span class="status-key">Score</span>
+      <span class="status-val" id="st-score">0</span>
+    </div>
+    <div class="status-row">
+      <span class="status-key">Globes Found</span>
+      <span class="status-val" id="st-found">0 of 0</span>
+    </div>
+    <div class="status-row">
+      <span class="status-key">Leaderboard Sync</span>
+      <span class="status-val dim" id="st-sync">Not synced</span>
+    </div>
+    <div class="status-row">
+      <span class="status-key">Location</span>
+      <span class="status-val dim" id="st-loc">Unknown</span>
+    </div>
+    <button id="status-close" onclick="closeStatusModal()">Close</button>
+  </div>
+</div>
+
+<!-- ABOUT MODAL -->
+<div id="about-overlay" style="position:fixed;inset:0;background:rgba(7,11,17,0.82);z-index:5500;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.3s;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)">
+  <div id="about-card" style="width:100%;background:var(--surf);border-top:1px solid var(--border2);border-radius:20px 20px 0 0;padding:28px 24px calc(32px + var(--safe-bot));transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.32,0.72,0,1)">
+    <div style="width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 20px"></div>
+    <h3 style="font-family:var(--head);font-weight:800;font-size:1.1rem;color:var(--text);margin-bottom:18px">
+      About <em style="font-style:normal;color:var(--accent)">GeoCatcher AR</em>
+    </h3>
+    <p style="font-size:0.78rem;color:var(--muted);line-height:1.9;letter-spacing:0.03em">
+      This app was vibe-coded with <a href="https://claude.ai" target="_blank" style="color:var(--accent);text-decoration:none">Claude.ai</a>
+      and uses <a href="https://services.arcgisonline.com" target="_blank" style="color:var(--accent);text-decoration:none">ArcGIS REST services</a>.
+    </p>
+    <!-- room for additional content -->
+    <div style="min-height:32px"></div>
+    <button onclick="closeAboutModal()" style="margin-top:8px;width:100%;height:48px;background:none;border:1px solid var(--border2);border-radius:10px;color:var(--muted);font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;touch-action:manipulation">Close</button>
+  </div>
+</div>
 </body>
 </html>
