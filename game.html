@@ -75,7 +75,8 @@ function adminReset() {
 }
 
 /* ── DROPDOWN MENU ── */
-function toggleMenu() {
+function toggleMenu(e) {
+  if (e) e.stopPropagation();
   var btn  = document.getElementById('menu-btn');
   var drop = document.getElementById('menu-dropdown');
   var open = drop.classList.contains('open');
@@ -88,11 +89,11 @@ function closeMenu() {
   document.getElementById('menu-btn').classList.remove('open');
   document.getElementById('menu-dropdown').classList.remove('open');
 }
-// Close menu if tapping outside
+// Close menu when tapping outside — use capture to catch all clicks
 document.addEventListener('click', function(e) {
   var wrap = document.getElementById('menu-wrap');
   if (wrap && !wrap.contains(e.target)) closeMenu();
-});
+}, true);
 
 /* ── STATUS MODAL ── */
 function openStatusModal() {
@@ -165,6 +166,8 @@ setPill = function(cls, txt) {
 
 /* ── ABOUT MODAL ── */
 function openAboutModal() {
+  var vEl = document.getElementById('about-version');
+  if (vEl) vEl.textContent = 'GeoCatcher AR v' + APP_VERSION;
   var o = document.getElementById('about-overlay');
   var c = document.getElementById('about-card');
   o.style.opacity = '0'; o.style.pointerEvents = 'none';
@@ -421,7 +424,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
       &#9733; <span id="score-num">0</span>
     </div>
     <div id="menu-wrap">
-      <button id="menu-btn" onclick="toggleMenu()" aria-label="Menu">
+      <button id="menu-btn" onclick="toggleMenu(event)" aria-label="Menu">
         <span id="menu-dot"></span>
         <span id="menu-label">Menu</span>
         <svg id="menu-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none">
@@ -429,19 +432,19 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
         </svg>
       </button>
       <div id="menu-dropdown">
-        <button class="menu-item" onclick="openLeaderboard(); closeMenu()">
+        <button class="menu-item" onclick="openLeaderboard(); closeMenu(); event.stopPropagation()">
           <span class="menu-item-dot"></span>
           Leaderboard
         </button>
-        <button class="menu-item" onclick="openStatusModal(); closeMenu()">
+        <button class="menu-item" onclick="openStatusModal(); closeMenu(); event.stopPropagation()">
           <span class="menu-item-dot" id="status-dot"></span>
           Status
         </button>
-        <button class="menu-item" style="color:var(--warn)" onclick="adminReset(); closeMenu()">
+        <button class="menu-item" style="color:var(--warn)" onclick="adminReset(); closeMenu(); event.stopPropagation()">
           <span class="menu-item-dot err"></span>
           Reset App
         </button>
-        <button class="menu-item" onclick="openAboutModal(); closeMenu()">
+        <button class="menu-item" onclick="openAboutModal(); closeMenu(); event.stopPropagation()">
           <span class="menu-item-dot"></span>
           About
         </button>
@@ -637,6 +640,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 /* =====================================================
    CONFIGURATION
    ===================================================== */
+var APP_VERSION = "1.1";  // increment with each release
 var SUPABASE_URL      = "https://dnoqkdtfrrpdgfjpvskq.supabase.co";
 var SUPABASE_KEY      = "sb_publishable_GgtHzHoUTxPdbzsCNwqOcg_7wR27SkM";
 var GLOBE_GLB_URL     = "https://trbaker.github.io/geogames/Nearky_Pangea.glb";
@@ -954,6 +958,13 @@ function startTracking() {
   document.getElementById('map-loading').classList.add('show');
   mapCentered = false;
 
+  // Update button to Stop state immediately — don't wait for first GPS fix
+  btn.classList.remove('busy');
+  btn.style.borderColor = 'var(--warn)';
+  btn.style.color       = 'var(--warn)';
+  document.getElementById('btn-label').textContent = '\u25a0\u00a0 Stop Tracking';
+  setPill('', 'Locating\u2026');
+
   watchId = navigator.geolocation.watchPosition(
     function(pos) {
       try {
@@ -969,31 +980,32 @@ function startTracking() {
         document.getElementById('lng-dms').textContent = lastDMSlng;
         document.getElementById('cc-lat').classList.add('lit');
         document.getElementById('cc-lng').classList.add('lit');
-        setPill('on', 'Tracking'); hideErr();
+        setPill('on', 'Tracking');
+        hideErr();
+        document.getElementById('map-loading').classList.remove('show');
         if (window._plotPosition) {
           try { window._plotPosition(lat, lng, acc); } catch(me) {
-            document.getElementById('map-loading').classList.remove('show');
+            console.warn('Map plot error:', me.message);
           }
-        } else {
-          document.getElementById('map-loading').classList.remove('show');
         }
-        btn.classList.remove('busy');
-        btn.style.borderColor = 'var(--warn)'; btn.style.color = 'var(--warn)';
-        document.getElementById('btn-label').textContent = '\u25a0\u00a0 Stop Tracking';
         checkProximity(lat, lng);
-      } catch(e) { showErr('GPS error: ' + e.message); }
+      } catch(e) {
+        showErr('GPS error: ' + e.message);
+        console.warn('GPS callback error:', e);
+      }
     },
     function(err) {
       if (err.code === 1) {
+        // Fatal: permission denied — stop everything
         if (watchId !== null) { navigator.geolocation.clearWatch(watchId); watchId = null; }
-        btn.classList.remove('busy');
         btn.style.borderColor = ''; btn.style.color = '';
         document.getElementById('btn-label').textContent = 'Start Tracking';
         document.getElementById('map-loading').classList.remove('show');
-        setPill('err','Error');
+        setPill('err', 'Error');
         showErr('Location permission denied. Please enable it in Settings.');
       } else {
-        setPill('','Locating...');
+        // Transient — keep watching, signal will improve
+        setPill('', 'Locating\u2026');
         document.getElementById('map-loading').classList.remove('show');
       }
     },
@@ -1250,6 +1262,7 @@ document.addEventListener('DOMContentLoaded', function() {
       This app was vibe-coded with <a href="https://claude.ai" target="_blank" style="color:var(--accent);text-decoration:none">Claude.ai</a>
       and uses <a href="https://services.arcgisonline.com" target="_blank" style="color:var(--accent);text-decoration:none">ArcGIS REST services</a>.
     </p>
+    <p id="about-version" style="font-size:0.72rem;color:var(--muted);margin-top:12px;letter-spacing:0.06em"></p>
     <!-- room for additional content -->
     <div style="min-height:32px"></div>
     <button onclick="closeAboutModal()" style="margin-top:8px;width:100%;height:48px;background:none;border:1px solid var(--border2);border-radius:10px;color:var(--muted);font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;touch-action:manipulation">Close</button>
