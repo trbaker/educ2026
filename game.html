@@ -1011,9 +1011,9 @@ if (typeof require !== 'undefined') {
           geometry: new Point({ latitude:t.lat, longitude:t.lng }),
           symbol: new SimpleMarkerSymbol({
             style: 'circle',
-            color: collected ? [140,140,140,0.6] : [255,184,48,0.9],
+            color: collected ? [140,140,140,0.6] : [255,184,48,1.0],
             size: 12,
-            outline: { color:[255,255,255,0.7], width:1.5 }
+            outline: { color: collected ? [255,255,255,0.5] : [0,0,0,1.0], width: collected ? 1 : 2 }
           }),
           popupTemplate: {
             title:   t.name + (collected ? ' (collected)' : ''),
