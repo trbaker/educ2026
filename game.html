@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0b0f14">
-<title>GeoCatcher AR</title>
+<title>GeoCatcher</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/dark/main.css">
@@ -264,7 +264,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 <body>
 
 <header>
-  <div class="logo">Geo<em>Catcher AR</em></div>
+  <div class="logo">Geo<em>Catcher</em></div>
   <div class="header-right">
 
     <div class="score-badge" id="score-badge" onclick="openScorecard()" role="button">
@@ -432,7 +432,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
       <div class="sc-found-label">Globes discovered</div>
       <div class="sc-count" id="sc-count-display">0</div>
       <div class="sc-globe-label">out of <span id="sc-total">0</span> total</div>
-      <div class="sc-watermark">GeoCatcher AR &middot; EdSummit 2025</div>
+      <div class="sc-watermark">GeoCatcher &middot; EdSummit 2025</div>
     </div>
     <div id="scorecard-actions">
       <button id="sc-close-btn" onclick="closeScorecard()">Close</button>
@@ -459,7 +459,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
         <path d="M5 26 Q18 22 31 26" stroke="#ffb830" stroke-width="1" fill="none"/>
       </svg>
     </div>
-    <h2>Welcome to<br><em>GeoCatcher AR</em></h2>
+    <h2>Welcome to<br><em>GeoCatcher</em></h2>
     <p>Enter your name for the leaderboard</p>
     <input id="player-name-input" type="text" maxlength="24"
            placeholder="Your name" autocomplete="off" autocorrect="off"
@@ -961,7 +961,7 @@ function drawScorecard() {
   ctx.shadowBlur=0;
   ctx.fillStyle='#5d7a96'; ctx.font='11px monospace'; ctx.fillText('OUT OF '+TARGETS.length+' TOTAL',cx,ringY+r+272);
   ctx.fillStyle='rgba(93,122,150,0.4)'; ctx.font='10px monospace';
-  ctx.fillText('GeoCatcher AR - EdSummit 2025',cx,H-22);
+  ctx.fillText('GeoCatcher - EdSummit 2025',cx,H-22);
   return c;
 }
 function shareOrDownload(canvas,btn,orig) {
@@ -969,7 +969,7 @@ function shareOrDownload(canvas,btn,orig) {
     if (!blob) { btn.classList.remove('saving'); btn.innerHTML=orig; alert('Screenshot failed.'); return; }
     var file=new File([blob],'globecatcher-score.png',{type:'image/png'});
     if (navigator.canShare && navigator.canShare({files:[file]})) {
-      navigator.share({files:[file],title:'My GeoCatcher AR Score'})
+      navigator.share({files:[file],title:'My GeoCatcher Score'})
         .then(function(){flashSaved(btn,orig)}).catch(function(){flashSaved(btn,orig)});
       return;
     }
@@ -1209,7 +1209,7 @@ function closeStatusModal() {
 /* ── ABOUT MODAL ── */
 function openAboutModal() {
   var vEl = document.getElementById('about-version');
-  if (vEl) vEl.textContent = 'GeoCatcher AR v' + APP_VERSION;
+  if (vEl) vEl.textContent = 'GeoCatcher v' + APP_VERSION;
   document.getElementById('about-overlay').classList.add('open');
 }
 function closeAboutModal() {
@@ -1223,7 +1223,7 @@ function closeAboutModal() {
     <h3>App <em>Status</em></h3>
     <div class="status-row">
       <span class="status-key">App</span>
-      <span class="status-val ok">GeoCatcher AR</span>
+      <span class="status-val ok">GeoCatcher</span>
     </div>
     <div class="status-row">
       <span class="status-key">GPS Tracking</span>
@@ -1262,7 +1262,7 @@ function closeAboutModal() {
   <div id="about-card">
     <div style="width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 20px"></div>
     <h3 style="font-family:var(--head);font-weight:800;font-size:1.1rem;color:var(--text);margin-bottom:18px">
-      About <em style="font-style:normal;color:var(--accent)">GeoCatcher AR</em>
+      About <em style="font-style:normal;color:var(--accent)">GeoCatcher</em>
     </h3>
     <p style="font-size:0.78rem;color:var(--muted);line-height:1.9;letter-spacing:0.03em">
       This app was vibe-coded with <a href="https://claude.ai" target="_blank" style="color:var(--accent);text-decoration:none">Claude.ai</a>
