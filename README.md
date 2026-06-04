@@ -8,7 +8,7 @@ This is a mobile game that uses location to find AR objects within a defined are
 This shows the start screen without tracking enabled.
 <br><br>
 
-<img src="images/images/Unknown-1.png" width=300>
+<img src="images/Unknown-1.png" width=300>
 Requesting user approval to access location services - on iPhone.
 <br><br>
 
