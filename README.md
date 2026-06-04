@@ -3,8 +3,13 @@
 
 This is a mobile game that uses location to find AR objects within a defined area (like a hotel or convention center).  Here are some screen shots and explanation as to basic functionality as of June 1 2026.
 
+## Start-up
 <img src="images/1_start.png" width=300>
 This shows the start screen without tracking enabled.
+<br><br>
+
+<img src="images/images/Unknown-1.png" width=300>
+Requesting user approval to access location services - on iPhone.
 <br><br>
 
 <img src="images/2_home_with_tracking.png" width=300>
