@@ -11,7 +11,10 @@ This shows the start screen without tracking enabled.
 User has enabled tracking - essentailly normal "hunting for globes" mode.
 <br><br>
 
-##Found globe
+## Found globe
+
+<img src="images/Unknown-1 copy.png" width=300>
+This is what it looks like when a user "finds" a globe. I expect we would have 12-20 different globe figures. Each can be collected one time.
 
 <img src="images/Unknown copy.png" width=300>
 This is optionally what it looks like when a user opens the AR object - at least on iPhones.
@@ -20,7 +23,7 @@ This is optionally what it looks like when a user opens the AR object - at least
 This images shows what a user sees after they have found and collected a globe.
 <br><br>
 
-##Leaderboard
+## Leaderboard
 <img src="images/4_leader_board.png" width=300>
 This screen shows the "leader board" - a list of people who have found the most globes. In this screen, two usres are shown. Each user has collected one globe.
 <br><br>
