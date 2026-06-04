@@ -18,9 +18,12 @@ User has enabled tracking - essentailly normal "hunting for globes" mode.
 
 ## Found globe
 
+<img src="images/Unknown.png" width=300>
+user enters geofence for a globe. Screen pops up.
+<br><br>
 <img src="images/Unknown-1 copy.png" width=300>
 This is what it looks like when a user "finds" a globe. I expect we would have 12-20 different globe figures. Each can be collected one time.
-
+<br><br>
 <img src="images/Unknown copy.png" width=300>
 This is optionally what it looks like when a user opens the AR object - at least on iPhones.
 <br><br>
