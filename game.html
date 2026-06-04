@@ -10,7 +10,36 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/dark/main.css">
-<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js">
+/* ── COLLECT SOUND (Web Audio API — no file needed) ── */
+function playCollectSound() {
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function note(freq, startTime, duration, gain) {
+      var osc = ctx.createOscillator();
+      var env = ctx.createGain();
+      osc.connect(env);
+      env.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
+      env.gain.setValueAtTime(0, ctx.currentTime + startTime);
+      env.gain.linearRampToValueAtTime(gain, ctx.currentTime + startTime + 0.02);
+      env.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
+      osc.start(ctx.currentTime + startTime);
+      osc.stop(ctx.currentTime + startTime + duration);
+    }
+
+    // Soft ascending chime: three gentle tones
+    note(523.25, 0.00, 0.4, 0.18);   // C5
+    note(659.25, 0.12, 0.4, 0.15);   // E5
+    note(783.99, 0.24, 0.6, 0.12);   // G5
+
+  } catch(e) {
+    console.warn('Audio play error:', e.message);
+  }
+}
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -497,11 +526,24 @@ var TRIGGER_DIST_M    = 50;
 // TARGETS — add all 15 here when ready.
 // active: true  = shown on map and triggers proximity alert
 // active: false = hidden, not yet available to players
+// glbUrl        = AR object (.glb) shown when player collects this Globe
 var TARGETS = [
-  { id: "globe_01", name: "Globe #1",  lat: 38.912281, lng: -94.613686, active: true  },
-  // { id: "globe_02", name: "Globe #2",  lat: 0.000000,  lng: 0.000000,  active: false },
-  // { id: "globe_03", name: "Globe #3",  lat: 0.000000,  lng: 0.000000,  active: false },
-  // ... add remaining targets here
+  {
+    id:     "globe_01",
+    name:   "Globe #1",
+    lat:    38.912281,
+    lng:    -94.613686,
+    active: true,
+    glbUrl: "https://trbaker.github.io/geogames/Nearky_Pangea.glb"
+  },
+  // {
+  //   id:     "globe_02",
+  //   name:   "Globe #2",
+  //   lat:    0.000000,
+  //   lng:    0.000000,
+  //   active: false,
+  //   glbUrl: "https://your-host.com/model2.glb"
+  // },
 ];
 /* ===================================================== */
 
@@ -747,6 +789,14 @@ function dismissModal() {
 /* AR */
 function launchAR() {
   document.getElementById('modal-overlay').classList.remove('open');
+
+  // Load this target's specific GLB, fall back to global GLOBE_GLB_URL
+  var mv  = document.getElementById('the-model-viewer');
+  var url = (activeTarget && activeTarget.target.glbUrl)
+              ? activeTarget.target.glbUrl
+              : GLOBE_GLB_URL;
+  if (mv) mv.setAttribute('src', url);
+
   document.getElementById('ar-viewer').classList.add('open');
   arPending = true;
 }
@@ -773,6 +823,7 @@ function closeAR() {
       saveFoundTargets();
       score = Object.keys(foundTargets).length;  // recalculate from source of truth
       updateScore();
+      playCollectSound();
       showToast('+1  ' + activeTarget.target.name + ' found!');
     }
     activeTarget = null;
