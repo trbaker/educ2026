@@ -13,8 +13,8 @@ Requesting user approval to access location services - on iPhone.
 <br><br>
 
 <img src="images/2_home_with_tracking.png" width=300>
-User has enabled tracking - essentailly normal "hunting for globes" mode.<br>
-Symbology
+User has enabled tracking - essentailly normal "hunting for globes" mode.<br><br>
+Symbology:
 <LI>blue dot is user position
 <LI>gold dot is active, an uncollected globe target
 <LI>gray dot is a collected globe target
