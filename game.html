@@ -392,6 +392,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
     </div>
     <div class="modal-title"><em>Globe</em> detected!</div>
     <div class="modal-sub" id="modal-target-name"></div>
+    <div class="modal-sub" id="modal-target-desc" style="font-size:0.7rem;color:var(--muted);text-align:center;line-height:1.7;max-width:280px"></div>
     <div class="modal-dist" id="modal-dist"></div>
     <button id="ar-btn" onclick="launchAR()">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -516,7 +517,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 /* =====================================================
    CONFIGURATION
    ===================================================== */
-var APP_VERSION = "1.2";  // increment with each release
+var APP_VERSION = "1.3";  // increment with each release
 var SUPABASE_URL      = "https://dnoqkdtfrrpdgfjpvskq.supabase.co";
 var SUPABASE_KEY      = "sb_publishable_GgtHzHoUTxPdbzsCNwqOcg_7wR27SkM";
 var GLOBE_GLB_URL     = "https://trbaker.github.io/geogames/Nearky_Pangea.glb";
@@ -534,7 +535,8 @@ var TARGETS = [
     lat:    38.912281,
     lng:    -94.613686,
     active: true,
-    glbUrl: "https://trbaker.github.io/geogames/Nearky_Pangea.glb"
+    glbUrl: "https://trbaker.github.io/geogames/Nearky_Pangea.glb",
+    desc:   "This is a test globe only."
   },
   // {
   //   id:     "globe_02",
@@ -542,7 +544,8 @@ var TARGETS = [
   //   lat:    0.000000,
   //   lng:    0.000000,
   //   active: false,
-  //   glbUrl: "https://your-host.com/model2.glb"
+  //   glbUrl: "https://your-host.com/model2.glb",
+  //   desc:   "Description for Globe #2."
   // },
 ];
 /* ===================================================== */
@@ -774,6 +777,9 @@ function checkProximity(lat, lng) {
 function showModal(target, idx, distM) {
   activeTarget = { target: target, idx: idx };
   document.getElementById('modal-target-name').textContent = target.name;
+  // Show description if present (truncated to 100 chars for safety)
+  var descEl = document.getElementById('modal-target-desc');
+  if (descEl) descEl.textContent = target.desc ? target.desc.slice(0, 100) : '';
   document.getElementById('modal-dist').innerHTML =
     'You are <strong>' + distM + ' m</strong> from this Globe';
   document.getElementById('modal-overlay').classList.add('open');
@@ -1067,8 +1073,8 @@ if (typeof require !== 'undefined') {
             outline: { color: collected ? [255,255,255,0.5] : [0,0,0,1.0], width: collected ? 1 : 2 }
           }),
           popupTemplate: {
-            title:   t.name + (collected ? ' (collected)' : ''),
-            content: 'Lat: '+t.lat+'°, Lng: '+t.lng+'°'
+            title:   t.name + (collected ? ' ✓ Collected' : ''),
+            content: t.desc || ''
           }
         }));
       });
