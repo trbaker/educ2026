@@ -39,6 +39,37 @@ function playCollectSound() {
     console.warn('Audio play error:', e.message);
   }
 }
+
+/* ── SPLASH SCREEN ── */
+function showSplash() {
+  var s = document.getElementById('splash');
+  var v = document.getElementById('splash-version');
+  if (v) v.textContent = 'v' + APP_VERSION;
+  s.classList.remove('hide', 'gone');
+}
+
+function dismissSplash() {
+  var s = document.getElementById('splash');
+  s.classList.add('hide');
+  setTimeout(function() {
+    s.classList.add('gone');
+    // If no player name yet, open name entry
+    if (!playerName) openNameModal();
+  }, 600);
+}
+
+// Show splash on first load if no player name
+if (!playerName) {
+  document.addEventListener('DOMContentLoaded', function() {
+    showSplash();
+  });
+} else {
+  // Already have a name — hide splash immediately
+  document.addEventListener('DOMContentLoaded', function() {
+    var s = document.getElementById('splash');
+    if (s) s.classList.add('gone');
+  });
+}
 </script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -288,9 +319,108 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
   transition:transform 0.35s cubic-bezier(0.32,0.72,0,1);
 }
 #about-overlay.open #about-card { transform:translateY(0); }
+
+/* ── SPLASH SCREEN ── */
+#splash {
+  position: fixed; inset: 0; z-index: 9000;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 40px 32px calc(40px + var(--safe-bot));
+  gap: 0;
+  transition: opacity 0.6s ease;
+}
+#splash.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+#splash.gone { display: none; }
+
+.splash-globe {
+  width: 110px; height: 110px;
+  border: 2px solid rgba(255,184,48,0.5);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 32px;
+  animation: splash-ring 2.4s ease-in-out infinite;
+}
+@keyframes splash-ring {
+  0%,100% { box-shadow: 0 0 0 0 rgba(255,184,48,0.3), 0 0 0 0 rgba(255,184,48,0.15); }
+  50%      { box-shadow: 0 0 0 16px rgba(255,184,48,0), 0 0 0 32px rgba(255,184,48,0); }
+}
+
+.splash-title {
+  font-family: var(--head);
+  font-weight: 800;
+  font-size: 2.4rem;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+.splash-title em { font-style: normal; color: var(--accent); }
+
+.splash-sub {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 24px;
+}
+.splash-instructions {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  text-align: center;
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+  max-width: 320px;
+  margin-bottom: 36px;
+}
+
+#splash-btn {
+  width: 100%; max-width: 300px; height: 60px;
+  background: var(--amber);
+  border: none; border-radius: 14px;
+  color: #0b0f14;
+  font-family: var(--mono); font-weight: 700;
+  font-size: 0.9rem; letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer; touch-action: manipulation;
+  -webkit-user-select: none; user-select: none;
+  box-shadow: 0 8px 32px rgba(255,184,48,0.3);
+  transition: transform 0.1s, opacity 0.1s;
+}
+#splash-btn:active { transform: scale(0.97); opacity: 0.9; }
+
+.splash-version {
+  position: absolute; bottom: calc(18px + var(--safe-bot));
+  font-family: var(--mono); font-size: 0.6rem;
+  letter-spacing: 0.1em; color: rgba(93,122,150,0.4);
+}
 </style>
 </head>
 <body>
+
+<div id="splash">
+  <div class="splash-globe">
+    <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+      <circle cx="30" cy="30" r="26" stroke="#ffb830" stroke-width="2"/>
+      <ellipse cx="30" cy="30" rx="12" ry="26" stroke="#ffb830" stroke-width="1.5"/>
+      <line x1="4" y1="30" x2="56" y2="30" stroke="#ffb830" stroke-width="1.5"/>
+      <path d="M8 18 Q30 24 52 18" stroke="#ffb830" stroke-width="1.2" fill="none"/>
+      <path d="M8 42 Q30 36 52 42" stroke="#ffb830" stroke-width="1.2" fill="none"/>
+    </svg>
+  </div>
+  <div class="splash-title">Geo<em>Catcher</em></div>
+  <div class="splash-sub">Hunt &middot; Collect &middot; Compete</div>
+  <p class="splash-instructions">With your mobile device&#8217;s location services enabled, get within 100 feet of a globe on the map to catch it. Each time you catch a globe, you earn a point. Check the leaderboard (under Menu) to see if you are among the top GeoCatchers.</p>
+  <button id="splash-btn"  onclick="dismissSplash()">Start Playing &#8594;</button>
+  <div class="splash-version" id="splash-version"></div>
+</div>
 
 <header>
   <div class="logo">Geo<em>Catcher</em></div>
@@ -517,7 +647,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 /* =====================================================
    CONFIGURATION
    ===================================================== */
-var APP_VERSION = "1.3";  // increment with each release
+var APP_VERSION = "1.4";  // increment with each release
 var SUPABASE_URL      = "https://dnoqkdtfrrpdgfjpvskq.supabase.co";
 var SUPABASE_KEY      = "sb_publishable_GgtHzHoUTxPdbzsCNwqOcg_7wR27SkM";
 var GLOBE_GLB_URL     = "https://trbaker.github.io/geogames/Nearky_Pangea.glb";
@@ -1180,6 +1310,7 @@ function adminReset() {
   if (view && view.graphics) view.graphics.removeAll();
 
   showToast('Reset complete — ready to start over');
+  setTimeout(function() { showSplash(); }, 400);
 }
 
 /* ── DROPDOWN MENU ── */
