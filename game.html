@@ -24,8 +24,8 @@
 }
 html{height:100%;background:var(--bg);-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
 body{height:100dvh;display:flex;flex-direction:column;background:var(--bg);color:var(--text);font-family:var(--mono);overflow:hidden;padding-top:var(--safe-top);padding-left:var(--safe-l);padding-right:var(--safe-r)}
-header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:52px;background:var(--surf);border-bottom:1px solid var(--border);z-index:10;gap:10px}
-.logo{font-family:var(--head);font-weight:800;font-size:1.2rem;letter-spacing:-0.02em;flex-shrink:0}
+header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 14px;height:52px;background:var(--surf);border-bottom:1px solid var(--border);z-index:10;gap:8px}
+.logo{font-family:var(--head);font-weight:800;font-size:1.05rem;letter-spacing:-0.02em;flex-shrink:1;min-width:0}
 .logo em{font-style:normal;color:var(--accent)}
 .header-right{display:flex;align-items:center;gap:8px}
 
@@ -587,7 +587,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
 /* =====================================================
    CONFIGURATION
    ===================================================== */
-var APP_VERSION = "1.4";  // increment with each release
+var APP_VERSION = "1.5";  // increment with each release
 var SUPABASE_URL      = "https://dnoqkdtfrrpdgfjpvskq.supabase.co";
 var SUPABASE_KEY      = "sb_publishable_GgtHzHoUTxPdbzsCNwqOcg_7wR27SkM";
 var GLOBE_GLB_URL     = "https://trbaker.github.io/geogames/Nearky_Pangea.glb";
@@ -896,11 +896,14 @@ function closeAR() {
     var tid = activeTarget.target.id;
     if (!foundTargets[tid]) {              // safety: only count once
       foundTargets[tid] = true;
-      saveFoundTargets();
-      score = Object.keys(foundTargets).length;  // recalculate from source of truth
+      score = Object.keys(foundTargets).length;  // recalculate immediately
+      // Update UI first — before any storage calls that might throw
+      document.getElementById('score-num').textContent = score;
       updateScore();
       playCollectSound();
       showToast('+1  ' + activeTarget.target.name + ' found!');
+      // Persist to localStorage — wrapped so a storage error never blocks the UI
+      try { saveFoundTargets(); } catch(e) { console.warn('Save error:', e.message); }
     }
     activeTarget = null;
   }
@@ -953,8 +956,8 @@ function startTracking() {
         lastLat = lat; lastLng = lng; lastAcc = acc;
         lastDMSlat = toDMS(lat,'N','S');
         lastDMSlng = toDMS(lng,'E','W');
-        document.getElementById('lat-val').textContent = lat.toFixed(7) + '\u00b0';
-        document.getElementById('lng-val').textContent = lng.toFixed(7) + '\u00b0';
+        document.getElementById('lat-val').textContent = lat.toFixed(3) + '\u00b0';
+        document.getElementById('lng-val').textContent = lng.toFixed(3) + '\u00b0';
         document.getElementById('lat-dms').textContent = lastDMSlat;
         document.getElementById('lng-dms').textContent = lastDMSlng;
         document.getElementById('cc-lat').classList.add('lit');
@@ -1166,7 +1169,7 @@ if (typeof require !== 'undefined') {
       userGraphic = new Graphic({
         geometry: pt,
         symbol: new SimpleMarkerSymbol({style:'circle',color:[61,168,255,1],size:14,outline:{color:[255,255,255,0.9],width:2}}),
-        popupTemplate:{title:'You are here',content:'Lat: '+lat.toFixed(6)+'\u00b0<br>Lng: '+lng.toFixed(6)+'\u00b0<br>Accuracy: \u00b1'+Math.round(acc)+' m'}
+        popupTemplate:{title:'You are here',content:'Lat: '+lat.toFixed(3)+'\u00b0<br>Lng: '+lng.toFixed(3)+'\u00b0<br>Accuracy: \u00b1'+Math.round(acc)+' m'}
       });
       view.graphics.addMany([accuracyGraphic,userGraphic]);
       if (!mapCentered) {
@@ -1318,7 +1321,7 @@ function openStatusModal() {
     // Location
     var locEl = document.getElementById('st-loc');
     if (typeof lastLat !== 'undefined' && lastLat !== null) {
-      locEl.textContent = lastLat.toFixed(5) + ', ' + lastLng.toFixed(5);
+      locEl.textContent = lastLat.toFixed(3) + ', ' + lastLng.toFixed(3);
       locEl.className   = 'status-val ok';
     } else {
       locEl.textContent = 'Unknown'; locEl.className = 'status-val dim';
