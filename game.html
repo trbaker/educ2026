@@ -604,7 +604,11 @@ var TARGETS = [
     name:   "Globe #1",
     lat:    38.912281,
     lng:    -94.613686,
-    active: true,
+    active: true,            // master on/off switch
+    windows: [               // one or more active day/time periods
+      { day: 1, start: 9,  end: 11 },
+      { day: 2, start: 13, end: 15 }
+    ],
     glbUrl: "https://trbaker.github.io/geogames/Nearky_Pangea.glb",
     desc:   "This is a test globe only."
   },
@@ -614,6 +618,9 @@ var TARGETS = [
   //   lat:    0.000000,
   //   lng:    0.000000,
   //   active: false,
+  //   windows: [
+  //     { day: 1, start: 9, end: 11 }
+  //   ],
   //   glbUrl: "https://your-host.com/model2.glb",
   //   desc:   "Description for Globe #2."
   // },
@@ -829,11 +836,34 @@ function haversine(lat1, lng1, lat2, lng2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
+/* TIME-BASED AVAILABILITY */
+function isTargetAvailable(t) {
+  // Master switch must be on
+  if (!t.active) return false;
+  // No windows defined — treat as always active
+  if (!t.windows || t.windows.length === 0) return true;
+
+  var now         = new Date();
+  var eventBase   = new Date(EVENT_START_DATE + 'T00:00:00');
+  var msPerDay    = 24 * 60 * 60 * 1000;
+  var eventDay    = Math.floor((now - eventBase) / msPerDay) + 1;
+  var currentHour = now.getHours() + now.getMinutes() / 60;
+
+  // Check each window — available if ANY window matches
+  for (var i = 0; i < t.windows.length; i++) {
+    var w = t.windows[i];
+    if (eventDay === w.day && currentHour >= w.start && currentHour < w.end) {
+      return true;
+    }
+  }
+  return false;
+}
+
 /* PROXIMITY */
 function checkProximity(lat, lng) {
   for (var i = 0; i < TARGETS.length; i++) {
     var t = TARGETS[i];
-    if (!t.active) continue;                 // skip inactive targets
+    if (!isTargetAvailable(t)) continue;     // skip if inactive or outside time window
     if (foundTargets[t.id]) continue;        // already collected
     var d = haversine(lat, lng, t.lat, t.lng);
     if (d <= TRIGGER_DIST_M) {
@@ -1135,7 +1165,7 @@ if (typeof require !== 'undefined') {
       document.getElementById('placeholder').classList.add('gone');
       setPill('on','Map ready');
       TARGETS.forEach(function(t) {
-        if (!t.active) return;
+        if (!isTargetAvailable(t) && !foundTargets[t.id]) return; // hide unavailable uncollected targets
         var collected = !!foundTargets[t.id];
         view.graphics.add(new Graphic({
           geometry: new Point({ latitude:t.lat, longitude:t.lng }),
