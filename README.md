@@ -18,7 +18,7 @@ Requesting user approval to access location services - on iPhone.
 User has enabled tracking - essentailly normal "hunting for globes" mode.<br><br>
 Symbology:
 <LI>blue dot is user position
-<LI>gold dot is active, an uncollected globe target
+<LI>gold dot with black border is active, an uncollected globe target
 <LI>gray dot is a collected globe target
 <LI>clear dot is an inactive globe target (will go gold at a later time during conference)
 <br><br>
