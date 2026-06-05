@@ -10,67 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/dark/main.css">
-<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js">
-/* ── COLLECT SOUND (Web Audio API — no file needed) ── */
-function playCollectSound() {
-  try {
-    var ctx = new (window.AudioContext || window.webkitAudioContext)();
-
-    function note(freq, startTime, duration, gain) {
-      var osc = ctx.createOscillator();
-      var env = ctx.createGain();
-      osc.connect(env);
-      env.connect(ctx.destination);
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
-      env.gain.setValueAtTime(0, ctx.currentTime + startTime);
-      env.gain.linearRampToValueAtTime(gain, ctx.currentTime + startTime + 0.02);
-      env.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
-      osc.start(ctx.currentTime + startTime);
-      osc.stop(ctx.currentTime + startTime + duration);
-    }
-
-    // Soft ascending chime: three gentle tones
-    note(523.25, 0.00, 0.4, 0.18);   // C5
-    note(659.25, 0.12, 0.4, 0.15);   // E5
-    note(783.99, 0.24, 0.6, 0.12);   // G5
-
-  } catch(e) {
-    console.warn('Audio play error:', e.message);
-  }
-}
-
-/* ── SPLASH SCREEN ── */
-function showSplash() {
-  var s = document.getElementById('splash');
-  var v = document.getElementById('splash-version');
-  if (v) v.textContent = 'v' + APP_VERSION;
-  s.classList.remove('hide', 'gone');
-}
-
-function dismissSplash() {
-  var s = document.getElementById('splash');
-  s.classList.add('hide');
-  setTimeout(function() {
-    s.classList.add('gone');
-    // If no player name yet, open name entry
-    if (!playerName) openNameModal();
-  }, 600);
-}
-
-// Show splash on first load if no player name
-if (!playerName) {
-  document.addEventListener('DOMContentLoaded', function() {
-    showSplash();
-  });
-} else {
-  // Already have a name — hide splash immediately
-  document.addEventListener('DOMContentLoaded', function() {
-    var s = document.getElementById('splash');
-    if (s) s.classList.add('gone');
-  });
-}
-</script>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -342,22 +282,22 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 32px;
-  animation: splash-ring 2.4s ease-in-out infinite;
+
 }
-@keyframes splash-ring {
-  0%,100% { box-shadow: 0 0 0 0 rgba(255,184,48,0.3), 0 0 0 0 rgba(255,184,48,0.15); }
   50%      { box-shadow: 0 0 0 16px rgba(255,184,48,0), 0 0 0 32px rgba(255,184,48,0); }
 }
 
 .splash-title {
   font-family: var(--head);
   font-weight: 800;
-  font-size: 2.4rem;
+  font-size: clamp(1.5rem, 8vw, 2.0rem);
   letter-spacing: -0.03em;
   color: var(--text);
   text-align: center;
   line-height: 1.1;
   margin-bottom: 10px;
+  width: 100%;
+  max-width: 300px;
 }
 .splash-title em { font-style: normal; color: var(--accent); }
 
@@ -1402,6 +1342,67 @@ function openAboutModal() {
 }
 function closeAboutModal() {
   document.getElementById('about-overlay').classList.remove('open');
+}
+
+
+/* ── COLLECT SOUND (Web Audio API — no file needed) ── */
+function playCollectSound() {
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function note(freq, startTime, duration, gain) {
+      var osc = ctx.createOscillator();
+      var env = ctx.createGain();
+      osc.connect(env);
+      env.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
+      env.gain.setValueAtTime(0, ctx.currentTime + startTime);
+      env.gain.linearRampToValueAtTime(gain, ctx.currentTime + startTime + 0.02);
+      env.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
+      osc.start(ctx.currentTime + startTime);
+      osc.stop(ctx.currentTime + startTime + duration);
+    }
+
+    // Soft ascending chime: three gentle tones
+    note(523.25, 0.00, 0.4, 0.18);   // C5
+    note(659.25, 0.12, 0.4, 0.15);   // E5
+    note(783.99, 0.24, 0.6, 0.12);   // G5
+
+  } catch(e) {
+    console.warn('Audio play error:', e.message);
+  }
+}
+
+/* ── SPLASH SCREEN ── */
+function showSplash() {
+  var s = document.getElementById('splash');
+  var v = document.getElementById('splash-version');
+  if (v) v.textContent = 'v' + APP_VERSION;
+  s.classList.remove('hide', 'gone');
+}
+
+function dismissSplash() {
+  var s = document.getElementById('splash');
+  s.classList.add('hide');
+  setTimeout(function() {
+    s.classList.add('gone');
+    // If no player name yet, open name entry
+    if (!playerName) openNameModal();
+  }, 600);
+}
+
+// Show splash on first load if no player name
+if (!playerName) {
+  document.addEventListener('DOMContentLoaded', function() {
+    showSplash();
+  });
+} else {
+  // Already have a name — hide splash immediately
+  document.addEventListener('DOMContentLoaded', function() {
+    var s = document.getElementById('splash');
+    if (s) s.classList.add('gone');
+  });
 }
 </script>
 
