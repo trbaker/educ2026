@@ -1490,6 +1490,22 @@ function openShareModal() {
 function closeShareModal() {
   document.getElementById('share-overlay').classList.remove('open');
 }
+
+/* ── AUTO-RELOAD every 90 minutes from canonical server URL ── */
+(function() {
+  var RELOAD_URL      = "https://trbaker.github.io/educ2026/index.html";
+  var RELOAD_INTERVAL = 90 * 60 * 1000;  // 90 minutes in ms
+
+  setTimeout(function() {
+    // Don't interrupt an active AR session
+    if (typeof arPending !== 'undefined' && arPending) {
+      // Delay by 2 minutes and try again
+      setTimeout(function() { window.location.href = RELOAD_URL; }, 2 * 60 * 1000);
+    } else {
+      window.location.href = RELOAD_URL;
+    }
+  }, RELOAD_INTERVAL);
+})();
 </script>
 
 <!-- STATUS MODAL -->
