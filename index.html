@@ -398,7 +398,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
   </div>
   <div class="splash-title">Geo<em>Catcher</em></div>
   <div class="splash-sub">Hunt &middot; Collect &middot; Compete</div>
-  <p class="splash-instructions">With your mobile device&#8217;s location services enabled, get within 100 feet of a globe on the map to catch it. Each time you catch a globe, you earn a point. Check the leaderboard (under Menu) to see if you are among the top GeoCatchers.</p>
+  <p class="splash-instructions">With your mobile device&#8217;s location services enabled, get within 100 feet of a marker on the map to catch it. Each time you catch a marker, you earn a point. Check the leaderboard (under Menu) to see if you are among the top GeoCatchers.</p>
   <button id="splash-btn"  onclick="dismissSplash()">Start Playing &#8594;</button>
   <div class="splash-version" id="splash-version"></div>
 </div>
@@ -605,9 +605,9 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
       </svg>
     </div>
     <h2>Welcome to<br><em>GeoCatcher</em></h2>
-    <p>Enter your name for the leaderboard</p>
+    <p>Enter your nickname for the leaderboard</p>
     <input id="player-name-input" type="text" maxlength="24"
-           placeholder="Your name" autocomplete="off" autocorrect="off"
+           placeholder="Your nickname" autocomplete="off" autocorrect="off"
            autocapitalize="words" spellcheck="false">
     <button id="name-submit-btn" onclick="submitName()">Let's Go &#8594;</button>
   </div>
@@ -638,6 +638,10 @@ var SUPABASE_KEY      = "sb_publishable_GgtHzHoUTxPdbzsCNwqOcg_7wR27SkM";
 var GLOBE_GLB_URL     = "https://trbaker.github.io/geogames/Nearky_Pangea.glb";
 var WEB_MAP_ID        = "359e7e596f6745558679fc9962d7ab72";
 var TRIGGER_DIST_M    = 50;
+
+// Day 1 of the event (YYYY-MM-DD). Day 2 = this date + 1, Day 3 = this date + 2.
+// The device's local date/time is used to determine the current event day.
+var EVENT_START_DATE  = "2026-07-11";  // Day 1 (Pacific Daylight Time)
 
 // TARGETS — add all 15 here when ready.
 // active: true  = shown on map and triggers proximity alert
@@ -888,13 +892,20 @@ function isTargetAvailable(t) {
   // No windows defined — treat as always active
   if (!t.windows || t.windows.length === 0) return true;
 
-  var now         = new Date();
-  var eventBase   = new Date(EVENT_START_DATE + 'T00:00:00');
-  var msPerDay    = 24 * 60 * 60 * 1000;
-  var eventDay    = Math.floor((now - eventBase) / msPerDay) + 1;
-  var currentHour = now.getHours() + now.getMinutes() / 60;
+  // All event times are standardized to Pacific Daylight Time (UTC-7).
+  // Convert "now" to PDT regardless of the device's local timezone.
+  var PDT_OFFSET_MS = -7 * 60 * 60 * 1000;               // UTC-7
+  var nowUtcMs      = Date.now() + (new Date().getTimezoneOffset() * 60000); // device -> UTC
+  var pdtNow        = new Date(nowUtcMs + PDT_OFFSET_MS);
 
-  // Check each window — available if ANY window matches
+  // Event day 1 starts at midnight PDT on EVENT_START_DATE
+  var eventBase = new Date(EVENT_START_DATE + 'T00:00:00Z');  // treat as UTC midnight
+  eventBase     = new Date(eventBase.getTime() - PDT_OFFSET_MS); // shift so it's midnight PDT
+
+  var msPerDay    = 24 * 60 * 60 * 1000;
+  var eventDay    = Math.floor((pdtNow - eventBase) / msPerDay) + 1;
+  var currentHour = pdtNow.getUTCHours() + pdtNow.getUTCMinutes() / 60;
+
   for (var i = 0; i < t.windows.length; i++) {
     var w = t.windows[i];
     if (eventDay === w.day && currentHour >= w.start && currentHour < w.end) {
@@ -1031,8 +1042,8 @@ function startTracking() {
         lastLat = lat; lastLng = lng; lastAcc = acc;
         lastDMSlat = toDMS(lat,'N','S');
         lastDMSlng = toDMS(lng,'E','W');
-        document.getElementById('lat-val').textContent = lat.toFixed(3) + '\u00b0';
-        document.getElementById('lng-val').textContent = lng.toFixed(3) + '\u00b0';
+        document.getElementById('lat-val').textContent = lat.toFixed(4) + '\u00b0';
+        document.getElementById('lng-val').textContent = lng.toFixed(4) + '\u00b0';
         document.getElementById('lat-dms').textContent = lastDMSlat;
         document.getElementById('lng-dms').textContent = lastDMSlng;
         document.getElementById('cc-lat').classList.add('lit');
@@ -1244,7 +1255,7 @@ if (typeof require !== 'undefined') {
       userGraphic = new Graphic({
         geometry: pt,
         symbol: new SimpleMarkerSymbol({style:'circle',color:[61,168,255,1],size:14,outline:{color:[255,255,255,0.9],width:2}}),
-        popupTemplate:{title:'You are here',content:'Lat: '+lat.toFixed(3)+'\u00b0<br>Lng: '+lng.toFixed(3)+'\u00b0<br>Accuracy: \u00b1'+Math.round(acc)+' m'}
+        popupTemplate:{title:'You are here',content:'Lat: '+lat.toFixed(4)+'\u00b0<br>Lng: '+lng.toFixed(4)+'\u00b0<br>Accuracy: \u00b1'+Math.round(acc)+' m'}
       });
       view.graphics.addMany([accuracyGraphic,userGraphic]);
       if (!mapCentered) {
@@ -1396,7 +1407,7 @@ function openStatusModal() {
     // Location
     var locEl = document.getElementById('st-loc');
     if (typeof lastLat !== 'undefined' && lastLat !== null) {
-      locEl.textContent = lastLat.toFixed(3) + ', ' + lastLng.toFixed(3);
+      locEl.textContent = lastLat.toFixed(4) + ', ' + lastLng.toFixed(4);
       locEl.className   = 'status-val ok';
     } else {
       locEl.textContent = 'Unknown'; locEl.className = 'status-val dim';
@@ -1494,7 +1505,7 @@ function closeShareModal() {
 /* ── AUTO-RELOAD every 90 minutes from canonical server URL ── */
 (function() {
   var RELOAD_URL      = "https://trbaker.github.io/educ2026/index.html";
-  var RELOAD_INTERVAL = 90 * 60 * 1000;  // 90 minutes in ms
+  var RELOAD_INTERVAL = 120 * 60 * 1000;  // 120 minutes in ms
 
   setTimeout(function() {
     // Don't interrupt an active AR session
