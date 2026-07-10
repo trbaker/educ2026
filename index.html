@@ -643,6 +643,10 @@ var TRIGGER_DIST_M    = 50;
 // The device's local date/time is used to determine the current event day.
 var EVENT_START_DATE  = "2026-07-10";  // TESTING — set back to 2026-07-11 for the real event
 
+// TESTING: set true to show ALL active markers regardless of day/time window.
+// Set back to false for the real event so time windows are enforced.
+var TESTING_SHOW_ALL  = true;
+
 // TARGETS — add all 15 here when ready.
 // active: true  = shown on map and triggers proximity alert
 // active: false = hidden, not yet available to players
@@ -957,6 +961,8 @@ function haversine(lat1, lng1, lat2, lng2) {
 function isTargetAvailable(t) {
   // Master switch must be on
   if (!t.active) return false;
+  // TESTING override — ignore all day/time windows
+  if (typeof TESTING_SHOW_ALL !== 'undefined' && TESTING_SHOW_ALL) return true;
   // No windows defined — treat as always active
   if (!t.windows || t.windows.length === 0) return true;
 
