@@ -974,23 +974,31 @@ function isTargetAvailable(t) {
   // No windows defined — treat as always active
   if (!t.windows || t.windows.length === 0) return true;
 
-  // All event times are standardized to Pacific Daylight Time (UTC-7).
-  // Convert "now" to PDT regardless of the device's local timezone.
-  var PDT_OFFSET_MS = -7 * 60 * 60 * 1000;               // UTC-7
-  var nowUtcMs      = Date.now() + (new Date().getTimezoneOffset() * 60000); // device -> UTC
-  var pdtNow        = new Date(nowUtcMs + PDT_OFFSET_MS);
+  // All event times are Pacific Daylight Time (UTC-7).
+  // Build a single "PDT wall clock" moment: take real UTC now, add the PDT offset.
+  var nowUtcMs = Date.now();                       // real UTC milliseconds
+  var pdtMs    = nowUtcMs + (-7 * 60 * 60 * 1000);  // shift to PDT
+  var pdt      = new Date(pdtMs);
+  // Read the PDT wall-clock fields via the UTC getters (since we manually shifted)
+  var pdtYear  = pdt.getUTCFullYear();
+  var pdtMonth = pdt.getUTCMonth();
+  var pdtDate  = pdt.getUTCDate();
+  var pdtHour  = pdt.getUTCHours() + pdt.getUTCMinutes() / 60;
 
-  // Event day 1 starts at midnight PDT on EVENT_START_DATE
-  var eventBase = new Date(EVENT_START_DATE + 'T00:00:00Z');  // treat as UTC midnight
-  eventBase     = new Date(eventBase.getTime() - PDT_OFFSET_MS); // shift so it's midnight PDT
+  // Parse EVENT_START_DATE (YYYY-MM-DD) as a plain calendar date
+  var parts    = EVENT_START_DATE.split('-');
+  var startY   = parseInt(parts[0], 10);
+  var startM   = parseInt(parts[1], 10) - 1;
+  var startD   = parseInt(parts[2], 10);
 
-  var msPerDay    = 24 * 60 * 60 * 1000;
-  var eventDay    = Math.floor((pdtNow - eventBase) / msPerDay);  // EVENT_START_DATE = Day 0
-  var currentHour = pdtNow.getUTCHours() + pdtNow.getUTCMinutes() / 60;
+  // Whole-day difference using UTC calendar arithmetic (no DST/tz drift)
+  var todayUTC = Date.UTC(pdtYear, pdtMonth, pdtDate);
+  var startUTC = Date.UTC(startY, startM, startD);
+  var eventDay = Math.round((todayUTC - startUTC) / (24 * 60 * 60 * 1000));  // start date = Day 0
 
   for (var i = 0; i < t.windows.length; i++) {
     var w = t.windows[i];
-    if (eventDay === w.day && currentHour >= w.start && currentHour < w.end) {
+    if (eventDay === w.day && pdtHour >= w.start && pdtHour < w.end) {
       return true;
     }
   }
