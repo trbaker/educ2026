@@ -641,11 +641,12 @@ var TRIGGER_DIST_M    = 50;
 
 // Day 1 of the event (YYYY-MM-DD). Day 2 = this date + 1, Day 3 = this date + 2.
 // The device's local date/time is used to determine the current event day.
-var EVENT_START_DATE  = "2026-07-10";  // TESTING — set back to 2026-07-11 for the real event
+var EVENT_START_DATE  = "2026-07-10";  // Day 0 = July 10 (Pacific Daylight Time)
+                                       // Day 0 = Jul 10, Day 1 = Jul 11, Day 2 = Jul 12, Day 3 = Jul 13
 
 // TESTING: set true to show ALL active markers regardless of day/time window.
 // Set back to false for the real event so time windows are enforced.
-var TESTING_SHOW_ALL  = true;
+var TESTING_SHOW_ALL  = false;
 
 // TARGETS — add all 15 here when ready.
 // active: true  = shown on map and triggers proximity alert
@@ -659,6 +660,7 @@ var TARGETS = [
     lng:    -117.165375,
     active: true,            // master on/off switch
     windows: [               // one or more active day/time periods (times in PDT)
+      { day: 0, start: 9, end: 17 },  // Day 0 mirrors Day 1
       { day: 1, start: 9, end: 17 },
       { day: 2, start: 9, end: 17 },
       { day: 3, start: 9, end: 17 }
@@ -673,6 +675,7 @@ var TARGETS = [
     lng:    -117.166,
     active: true,
     windows: [
+      { day: 0, start: 9, end: 17 },  // Day 0 mirrors Day 1
       { day: 1, start: 9, end: 17 },
       { day: 2, start: 9, end: 17 },
       { day: 3, start: 9, end: 17 }
@@ -687,6 +690,7 @@ var TARGETS = [
     lng:    -117.164567,
     active: true,
     windows: [
+      { day: 0, start: 9, end: 17 },  // Day 0 mirrors Day 1
       { day: 1, start: 9,  end: 17 },
       { day: 2, start: 10, end: 12 }
     ],
@@ -700,6 +704,7 @@ var TARGETS = [
     lng:    -117.1666846,
     active: true,
     windows: [
+      { day: 0, start: 9, end: 17 },  // Day 0 mirrors Day 1
       { day: 1, start: 9,  end: 17 },
       { day: 2, start: 11, end: 13 }
     ],
@@ -713,6 +718,7 @@ var TARGETS = [
     lng:    -117.1666846,
     active: true,
     windows: [
+      { day: 0, start: 9, end: 17 },  // Day 0 mirrors Day 1
       { day: 1, start: 9,  end: 17 },
       { day: 2, start: 17, end: 19 }
     ],
@@ -726,6 +732,7 @@ var TARGETS = [
     lng:    -117.160243,
     active: true,
     windows: [
+      { day: 0, start: 9, end: 17 },  // Day 0 mirrors Day 1
       { day: 1, start: 9,  end: 17 },
       { day: 2, start: 18, end: 22 }
     ],
@@ -739,6 +746,7 @@ var TARGETS = [
     lng:    -117.17109,
     active: true,
     windows: [
+      { day: 0, start: 9, end: 17 },  // Day 0 mirrors Day 1
       { day: 1, start: 9,  end: 17 },
       { day: 2, start: 18, end: 22 }
     ],
@@ -977,7 +985,7 @@ function isTargetAvailable(t) {
   eventBase     = new Date(eventBase.getTime() - PDT_OFFSET_MS); // shift so it's midnight PDT
 
   var msPerDay    = 24 * 60 * 60 * 1000;
-  var eventDay    = Math.floor((pdtNow - eventBase) / msPerDay) + 1;
+  var eventDay    = Math.floor((pdtNow - eventBase) / msPerDay);  // EVENT_START_DATE = Day 0
   var currentHour = pdtNow.getUTCHours() + pdtNow.getUTCMinutes() / 60;
 
   for (var i = 0; i < t.windows.length; i++) {
