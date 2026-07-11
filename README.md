@@ -12,7 +12,7 @@ This is a mobile "geogame" that uses phone location services in the browser to f
 
 ## Start-up
 <img src="images/open_screen.png" width=300><br>
-This shows the start screen without tracking enabled. The gold dot shows the location of an active, uncollected globe target.
+This shows the start screen without tracking enabled. The gold dot shows the location of an active, uncollected map marker.
 <br><br>
 
 <img src="images/Unknown-1.png" width=300><br>
