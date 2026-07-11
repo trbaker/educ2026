@@ -573,8 +573,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
           <path d="M5 26 Q18 22 31 26" stroke="#ffb830" stroke-width="1" fill="none"/>
         </svg>
       </div>
-      <div class="sc-heading">I found <em>Globe</em><br>at the EdSummit</div>
-      <div class="sc-found-label">Globes discovered</div>
+      <div class="sc-heading">Map markers caught at the<br><em>2026 Esri Education Summit</em></div>
       <div class="sc-count" id="sc-count-display">0</div>
       <div class="sc-globe-label">out of <span id="sc-total">0</span> total</div>
       <div class="sc-watermark">GeoCatcher &middot; EdSummit 2025</div>
@@ -639,6 +638,13 @@ var GLOBE_GLB_URL     = "https://trbaker.github.io/geogames/Nearky_Pangea.glb";
 var WEB_MAP_ID        = "359e7e596f6745558679fc9962d7ab72";
 var TRIGGER_DIST_M    = 75;
 
+// Bounding box for the random marker generator.
+// New random marker locations must fall inside this geographic box.
+var MARKER_BOX_NORTH  =   32.709576;   // max latitude  (northern edge)
+var MARKER_BOX_SOUTH  =   32.708884;   // min latitude  (southern edge)
+var MARKER_BOX_EAST   = -117.165765;   // max longitude (eastern edge)
+var MARKER_BOX_WEST   = -117.16666;    // min longitude (western edge)
+
 // Day 1 of the event (YYYY-MM-DD). Day 2 = this date + 1, Day 3 = this date + 2.
 // The device's local date/time is used to determine the current event day.
 var EVENT_START_DATE  = "2026-07-10";  // Day 0 = July 10 (Pacific Daylight Time)
@@ -660,10 +666,9 @@ var TARGETS = [
     lng:    -117.1662206,
     active: true,            // master on/off switch
     windows: [               // one or more active day/time periods (times in PDT)
-      { day: 0, start: 9, end: 17 },  // Day 0 mirrors Day 1
-      { day: 1, start: 9, end: 17 },
-      { day: 2, start: 9, end: 17 },
-      { day: 3, start: 9, end: 17 }
+      { day: 0, start: 9, end: 17 },
+      { day: 1, start: 7, end: 16 },
+      { day: 2, start: 8, end: 16 }
     ],
     glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_red.glb",
     desc:   "Red marker"
@@ -676,9 +681,9 @@ var TARGETS = [
     active: true,
     windows: [
       { day: 0, start: 9, end: 17 },  // Day 0 mirrors Day 1
-      { day: 1, start: 13, end: 16 },
-      { day: 2, start: 9, end: 17 },
-      { day: 3, start: 9, end: 17 }
+      { day: 1, start: 8, end: 11 },
+      { day: 1, start: 13, end: 16.5 },
+      { day: 2, start: 8, end: 15 }
     ],
     glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/water_bottle.glb",
     desc:   "Water bottle"
@@ -814,6 +819,240 @@ var TARGETS = [
     ],
     glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/earth_nasa.glb",
     desc:   "The world"
+  },
+  {
+    id:     "globe_13",
+    name:   "Marker #13",
+    lat:    32.709485,
+    lng:    -117.166504,
+    active: true,
+    windows: [
+      { day: 1, start: 8.5, end: 9.25 },
+      { day: 1, start: 9.25, end: 10 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_blue.glb",
+    desc:   "Marker"
+  },
+  {
+    id:     "globe_14",
+    name:   "Marker #14",
+    lat:    32.709164,
+    lng:    -117.166146,
+    active: true,
+    windows: [
+      { day: 1, start: 13, end: 13.75 },
+      { day: 1, start: 13.75, end: 14.5 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_blue.glb",
+    desc:   "Marker"
+  },
+  {
+    id:     "globe_15",
+    name:   "Marker #15",
+    lat:    32.709572,
+    lng:    -117.165969,
+    active: true,
+    windows: [
+      { day: 1, start: 11.75, end: 12.5 },
+      { day: 1, start: 12.75, end: 13.5 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_blue.glb",
+    desc:   "Marker"
+  },
+  {
+    id:     "globe_16",
+    name:   "Marker #16",
+    lat:    32.709574,
+    lng:    -117.16593,
+    active: true,
+    windows: [
+      { day: 1, start: 13.25, end: 14 },
+      { day: 1, start: 15.5, end: 16.25 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_blue.glb",
+    desc:   "Marker"
+  },
+  {
+    id:     "globe_17",
+    name:   "Marker #17",
+    lat:    32.709204,
+    lng:    -117.16664,
+    active: true,
+    windows: [
+      { day: 1, start: 13.5, end: 14.25 },
+      { day: 1, start: 16.25, end: 17 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_blue.glb",
+    desc:   "Marker"
+  },
+  {
+    id:     "globe_18",
+    name:   "Marker #18",
+    lat:    32.70957,
+    lng:    -117.1666,
+    active: true,
+    windows: [
+      { day: 1, start: 8, end: 8.75 },
+      { day: 1, start: 8.75, end: 9.5 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_blue.glb",
+    desc:   "Marker"
+  },
+  {
+    id:     "globe_19",
+    name:   "Marker #19",
+    lat:    32.709007,
+    lng:    -117.166588,
+    active: true,
+    windows: [
+      { day: 1, start: 9.75, end: 10.5 },
+      { day: 1, start: 11.75, end: 12.5 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_blue.glb",
+    desc:   "Marker"
+  },
+  {
+    id:     "globe_20",
+    name:   "Marker #20",
+    lat:    32.709381,
+    lng:    -117.166659,
+    active: true,
+    windows: [
+      { day: 1, start: 9.5, end: 10.25 },
+      { day: 1, start: 10.75, end: 11.5 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_blue.glb",
+    desc:   "Marker"
+  },
+  {
+    id:     "globe_21",
+    name:   "Marker #21",
+    lat:    32.709057,
+    lng:    -117.165796,
+    active: true,
+    windows: [
+      { day: 1, start: 15, end: 15.75 },
+      { day: 1, start: 16, end: 16.75 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_blue.glb",
+    desc:   "Marker"
+  },
+  {
+    id:     "globe_22",
+    name:   "Marker #22",
+    lat:    32.709248,
+    lng:    -117.166561,
+    active: true,
+    windows: [
+      { day: 1, start: 13.5, end: 14.25 },
+      { day: 1, start: 15.75, end: 16.5 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_blue.glb",
+    desc:   "Marker"
+  },
+  {
+    id:     "globe_23",
+    name:   "Marker #23",
+    lat:    32.709355,
+    lng:    -117.166254,
+    active: true,
+    windows: [
+      { day: 2, start: 8.25, end: 9 },
+      { day: 2, start: 14.25, end: 15 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_blue.glb",
+    desc:   "Marker"
+  },
+  {
+    id:     "globe_24",
+    name:   "Marker #24",
+    lat:    32.709204,
+    lng:    -117.165928,
+    active: true,
+    windows: [
+      { day: 2, start: 9, end: 9.75 },
+      { day: 2, start: 16.25, end: 17 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_blue.glb",
+    desc:   "Marker"
+  },
+  {
+    id:     "globe_25",
+    name:   "Marker #25",
+    lat:    32.709189,
+    lng:    -117.165964,
+    active: true,
+    windows: [
+      { day: 2, start: 9.25, end: 10 },
+      { day: 2, start: 15.75, end: 16.5 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_blue.glb",
+    desc:   "Marker"
+  },
+  {
+    id:     "globe_26",
+    name:   "Marker #26",
+    lat:    32.709195,
+    lng:    -117.166607,
+    active: true,
+    windows: [
+      { day: 2, start: 12.25, end: 13 },
+      { day: 2, start: 14.75, end: 15.5 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_blue.glb",
+    desc:   "Marker"
+  },
+  {
+    id:     "globe_27",
+    name:   "Marker #27",
+    lat:    32.709195,
+    lng:    -117.165947,
+    active: true,
+    windows: [
+      { day: 2, start: 9, end: 9.75 },
+      { day: 2, start: 10, end: 10.75 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_blue.glb",
+    desc:   "Marker"
+  },
+  {
+    id:     "globe_28",
+    name:   "Marker #28",
+    lat:    32.709271,
+    lng:    -117.166528,
+    active: true,
+    windows: [
+      { day: 2, start: 11.75, end: 12.5 },
+      { day: 2, start: 15.75, end: 16.5 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_blue.glb",
+    desc:   "Marker"
+  },
+  {
+    id:     "globe_29",
+    name:   "Marker #29",
+    lat:    32.709053,
+    lng:    -117.165838,
+    active: true,
+    windows: [
+      { day: 2, start: 8, end: 8.75 },
+      { day: 2, start: 12, end: 12.75 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_blue.glb",
+    desc:   "Marker"
+  },
+  {
+    id:     "globe_30",
+    name:   "Marker #30",
+    lat:    32.70936,
+    lng:    -117.166654,
+    active: true,
+    windows: [
+      { day: 2, start: 9.75, end: 10.5 },
+      { day: 2, start: 16.25, end: 17 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/marker_blue.glb",
+    desc:   "Marker"
   },
 ];
 /* ===================================================== */
@@ -1320,10 +1559,8 @@ function drawScorecard() {
   ctx.beginPath(); ctx.moveTo(5,26); ctx.quadraticCurveTo(18,22,31,26); ctx.stroke();
   ctx.restore();
   ctx.textAlign='center';
-  ctx.fillStyle='#e8f2ff'; ctx.font='bold 20px sans-serif'; ctx.fillText('I found',cx,ringY+r+36);
-  ctx.fillStyle='#ffb830'; ctx.font='bold 26px sans-serif'; ctx.fillText('Globe',cx,ringY+r+66);
-  ctx.fillStyle='#e8f2ff'; ctx.font='bold 18px sans-serif'; ctx.fillText('at the EdSummit',cx,ringY+r+92);
-  ctx.fillStyle='#5d7a96'; ctx.font='11px monospace'; ctx.fillText('GLOBIES DISCOVERED',cx,ringY+r+126);
+  ctx.fillStyle='#e8f2ff'; ctx.font='bold 17px sans-serif'; ctx.fillText('Map markers caught at the',cx,ringY+r+40);
+  ctx.fillStyle='#ffb830'; ctx.font='bold 19px sans-serif'; ctx.fillText('2026 Esri Education Summit',cx,ringY+r+68);
   ctx.shadowColor='rgba(255,184,48,0.4)'; ctx.shadowBlur=32;
   ctx.fillStyle='#ffb830'; ctx.font='bold 130px sans-serif'; ctx.fillText(String(score),cx,ringY+r+248);
   ctx.shadowBlur=0;
@@ -1747,7 +1984,7 @@ function closeShareModal() {
       About <em style="font-style:normal;color:var(--accent)">GeoCatcher</em>
     </h3>
     <p style="font-size:0.78rem;color:var(--muted);line-height:1.9;letter-spacing:0.03em">
-      This app was vibe-coded with Claude.ai and uses ArcGIS REST services.
+      This app was vibe-coded by Tom Baker (Esri Education Team) with Claude.ai and uses ArcGIS REST Services.
       See the <a href="https://github.com/trbaker/educ2026" target="_blank" style="color:var(--accent);text-decoration:none">GitHub repo</a>.
     </p>
     <p id="about-version" style="font-size:0.72rem;color:var(--muted);margin-top:12px;letter-spacing:0.06em"></p>
