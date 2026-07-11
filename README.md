@@ -1,9 +1,9 @@
 
 # GeoCatcher
 
-Created by Tom Baker (tbaker@esri.com) of the Esri Education Team - using Claude.ai to "vibe-code".
+Created by Tom Baker (tbaker@esri.com) of the Esri Education Team - using Claude.ai to "vibe-code". Neither Esri nor Tom are collecting any personally identifiable information in this app.  Your location data is used only in your browser and not reported back to Tom or Esri at any time. Location precision within the Marriott Marquis San Diego Marina is HIGHLY variable and may dramatically effect game play.
 
-<a href="game.html">Game explanation</a>
+## Game overview
 
 This game is experimental and offers no technical supprt. It is not an Esri software product.  
 
