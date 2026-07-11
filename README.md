@@ -22,7 +22,7 @@ Requesting user approval to access location services - on iPhone.
 <br><br>
 
 <img src="images/2_home_with_tracking.png" width=300><br>
-User has enabled tracking - essentailly normal "hunting for globes" mode.<br><br>
+A player has started tracking - essentailly normal "searching for map markers" mode.<br><br>
 Symbology:
 <LI>blue dot is user position
 <LI>gold dot with black border is active, an uncollected globe target
@@ -33,20 +33,20 @@ Symbology:
 ## Found globe
 
 <img src="images/Unknown.png" width=300><br>
-User enters geofence for a marker. Screen pops up.
+Player enters geofence for a marker. Screen pops up.
 <br><br>
 <img src="images/Unknown-1 copy.png" width=300><br>
-When a user "finds" a marker.There are 30 markers - 11 are special markers. Each can be caught one time.
+When a player "catches" a marker.There are 30 markers - 11 are special markers. Each can be caught one time.
 <br><br>
 <img src="images/Unknown copy.png" width=300><br>
-This is optionally what it looks like when a user opens the AR object (an interactive, pass-through display) - on iPhones.
+This is optionally what it looks like when a player opens the AR object (an interactive, pass-through display) - on iPhones.
 <br><br>
 <img src="images/3_identify_collected_point.png" width=300><br>
-This images shows what a user sees after they have caught a marker.
+This images shows what a player sees after they have caught a map marker.
 <br><br>
 
 ## Leaderboard
 <img src="images/4_leader_board.png" width=300><br>
-This screen shows the "leaderboard" - a list of people who have found the most markers. In this screen, two usres are shown. Each user has caught one marker.
+This screen shows the "leaderboard" - a list of players who have caught the most map markers. In this screen, two players are shown. Each player has caught one marker.
 <br><br>
 
