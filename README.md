@@ -1,9 +1,14 @@
 
 # GeoCatcher
 
-<a href="game.html">Game demo</a>
+Created by Tom Baker (tbaker@esri.com) of the Esri Education Team - using Claude.ai to "vibe-code".
 
-This is a mobile game that uses location to find AR objects within a defined area (like a hotel or convention center).  Here are some screen shots and explanation as to basic functionality as of June 1 2026.
+<a href="game.html">Game explanation</a>
+
+This game is experimental and offers no technical supprt. It is not an Esri software product.  
+
+This is a mobile "geogame" that uses phone location services in the browser to find hidden AR (augmented reality) map markers within a defined area - like a hotel or convention center.  Players get within the geofence of the predefined markers to "catch" the marker and earn a point. Winenrs listed on the "Leaderboard" win only the respect and honor from fellow players.
+ Screen shots and explanations follow.
 
 ## Start-up
 <img src="images/open_screen.png" width=300><br>
@@ -26,20 +31,20 @@ Symbology:
 ## Found globe
 
 <img src="images/Unknown.png" width=300><br>
-user enters geofence for a globe. Screen pops up.
+User enters geofence for a marker. Screen pops up.
 <br><br>
 <img src="images/Unknown-1 copy.png" width=300><br>
-This is what it looks like when a user "finds" a globe. I expect we would have 12-20 different globe figures. Each can be collected one time.
+When a user "finds" a marker.There are 30 markers - 11 are special markers. Each can be caught one time.
 <br><br>
 <img src="images/Unknown copy.png" width=300><br>
-This is optionally what it looks like when a user opens the AR object - at least on iPhones.
+This is optionally what it looks like when a user opens the AR object (an interactive, pass-through display) - on iPhones.
 <br><br>
 <img src="images/3_identify_collected_point.png" width=300><br>
-This images shows what a user sees after they have found and collected a globe.
+This images shows what a user sees after they have caught a marker.
 <br><br>
 
 ## Leaderboard
 <img src="images/4_leader_board.png" width=300><br>
-This screen shows the "leader board" - a list of people who have found the most globes. In this screen, two usres are shown. Each user has collected one globe.
+This screen shows the "leaderboard" - a list of people who have found the most markers. In this screen, two usres are shown. Each user has caught one marker.
 <br><br>
 
