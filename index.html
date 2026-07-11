@@ -398,7 +398,7 @@ header{flex-shrink:0;display:flex;align-items:center;justify-content:space-betwe
   </div>
   <div class="splash-title">Geo<em>Catcher</em></div>
   <div class="splash-sub">Hunt &middot; Collect &middot; Compete</div>
-  <p class="splash-instructions">With your mobile device&#8217;s location services enabled, get within 100 feet of a marker on the map to catch it. Each time you catch a marker, you earn a point. Check the leaderboard (under Menu) to see if you are among the top GeoCatchers.</p>
+  <p class="splash-instructions">With your mobile device&#8217;s location services enabled, get within 75 meters of a marker on the map to catch it. Each time you catch a marker, you earn a point. Check the leaderboard (under Menu) to see if you are among the top GeoCatchers.</p>
   <button id="splash-btn"  onclick="dismissSplash()">Start Playing &#8594;</button>
   <div class="splash-version" id="splash-version"></div>
 </div>
@@ -637,7 +637,7 @@ var SUPABASE_URL      = "https://zjngzjcrbfdtcvokdvyx.supabase.co";
 var SUPABASE_KEY      = "sb_publishable_50nNXhHcse4RZ_VgewI1Qw_5NOK4HmG";
 var GLOBE_GLB_URL     = "https://trbaker.github.io/geogames/Nearky_Pangea.glb";
 var WEB_MAP_ID        = "359e7e596f6745558679fc9962d7ab72";
-var TRIGGER_DIST_M    = 50;
+var TRIGGER_DIST_M    = 75;
 
 // Day 1 of the event (YYYY-MM-DD). Day 2 = this date + 1, Day 3 = this date + 2.
 // The device's local date/time is used to determine the current event day.
@@ -749,6 +749,71 @@ var TARGETS = [
     ],
     glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/drone.glb",
     desc:   "Drone"
+  },
+  {
+    id:     "globe_08",
+    name:   "Marker #8",
+    lat:    32.7088498,
+    lng:    -117.1666320,
+    active: true,
+    windows: [
+      { day: 0, start: 20, end: 23 },  // Day 0 preview
+      { day: 2, start: 11, end: 12.5 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/cc_map.glb",
+    desc:   "SDCC map"
+  },
+  {
+    id:     "globe_09",
+    name:   "Marker #9",
+    lat:    32.7092997,
+    lng:    -117.1662986,
+    active: true,
+    windows: [
+      { day: 0, start: 20, end: 23 },  // Day 0 preview
+      { day: 2, start: 11.5, end: 13 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/AI.glb",
+    desc:   "AI"
+  },
+  {
+    id:     "globe_10",
+    name:   "Marker #10",
+    lat:    32.709297,
+    lng:    -117.166044,
+    active: true,
+    windows: [
+      { day: 0, start: 20, end: 23 },  // Day 0 preview
+      { day: 2, start: 11.5, end: 13 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/gps.glb",
+    desc:   "GPS"
+  },
+  {
+    id:     "globe_11",
+    name:   "Marker #11",
+    lat:    32.7089640,
+    lng:    -117.1666846,
+    active: true,
+    windows: [
+      { day: 0, start: 20, end: 23 },  // Day 0 preview
+      { day: 2, start: 17, end: 19 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/chest.glb",
+    desc:   "Treasure"
+  },
+  {
+    id:     "globe_12",
+    name:   "Marker #12",
+    lat:    32.709699,
+    lng:    -117.165375,
+    active: true,
+    windows: [
+      { day: 0, start: 20, end: 23 },  // Day 0 preview
+      { day: 2, start: 9, end: 17 }
+    ],
+    glbUrl: "https://geogame-support.s3.us-east-1.amazonaws.com/models/earth_nasa.glb",
+    desc:   "The world"
   },
 ];
 /* ===================================================== */
