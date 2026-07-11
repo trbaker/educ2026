@@ -7,7 +7,7 @@ Created by Tom Baker (tbaker@esri.com) of the Esri Education Team - using Claude
 
 This game is experimental and offers no technical support. It is NOT an Esri software product.  
 
-This is a mobile "geogame" that uses phone location services in the browser to find hidden AR (augmented reality) map markers within a defined area - like a hotel or convention center.  Players get within the geofence of the predefined markers to "catch" the marker and earn a point. Winenrs listed on the "Leaderboard" win only the respect and honor from fellow players.
+This is a mobile "geogame" that uses phone location services in the browser to find hidden AR (augmented reality) map markers within a defined area - like a hotel or convention center.  Players get within the geofence of the predefined markers to "catch" the marker and earn a point. Winners listed on the "Leaderboard" win only the respect and honor from fellow players.
  Screen shots and explanations follow.
 
 ## Start-up
